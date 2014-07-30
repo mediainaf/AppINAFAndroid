@@ -9,21 +9,24 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
+import org.apache.http.protocol.HTTP;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -119,6 +122,32 @@ public class FeedListRequest extends Fragment {
         super.onStop();
     }
 
+    protected static final String TYPE_UTF8_CHARSET = "charset=UTF-8";
+
+
+    private class StringUTF8Request extends StringRequest {
+
+        public StringUTF8Request(int method, String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+            super(method, url, listener, errorListener);
+        }
+
+        @Override
+        protected Response<String> parseNetworkResponse(NetworkResponse response) {
+            try {
+                // set HTML header to utf8 charset as default
+                String contentType = response.headers.get("content-type");
+                if(contentType == null)
+                    contentType = "text/html; charset=utf-8";
+                response.headers.put(HTTP.CONTENT_TYPE,contentType);
+                String s = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                //
+                return Response.success(s, HttpHeaderParser.parseCacheHeaders(response));
+            } catch (UnsupportedEncodingException e) {
+                return Response.error(new ParseError(e));
+            }
+        }
+    }
+
     private class ResponseListener implements Response.Listener<String> {
 
         private String formatDate(String date)
@@ -192,7 +221,7 @@ public class FeedListRequest extends Fragment {
      * Start the volley request.
      */
     public void start(int method, String url) {
-        StringRequest request = new StringRequest(method, url, new ResponseListener(), new ErrorListener());
+        StringUTF8Request request = new StringUTF8Request(method, url, new ResponseListener(), new ErrorListener());
         INAF.requestQueue.add(request);
         mRunning = true;
     }
