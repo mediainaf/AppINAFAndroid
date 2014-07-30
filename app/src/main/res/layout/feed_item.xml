@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+  <ImageView
+    android:id="@+id/imageView1"
+    android:layout_width="96dp"
+    android:layout_height="96dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:src="@drawable/ic_launcher" />
+  <LinearLayout
+    android:id="@+id/vlayout1"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="96dp"
+    android:layout_toRightOf="@id/imageView1"
+    android:layout_marginLeft="5dp">
+    <TextView
+      android:id="@+id/txtTitle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:maxLines="2"
+      android:text="Title"
+      android:textSize="15sp"
+      android:textStyle="bold" />
+    <TextView
+      android:id="@+id/txtSubtitle"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="10dp"
+      android:text="Subtitle"
+      android:textSize="10sp"
+      android:textStyle="italic" />
+    <TextView
+      android:id="@+id/txtDescription"
+      android:layout_width="fill_parent"
+      android:layout_height="0dip"
+      android:layout_weight="1"
+      android:layout_marginLeft="10dp"
+      android:text="Description"
+      android:textSize="12sp"
+      android:textStyle="normal"
+      android:ellipsize="end" />
+  </LinearLayout>
+</RelativeLayout>
