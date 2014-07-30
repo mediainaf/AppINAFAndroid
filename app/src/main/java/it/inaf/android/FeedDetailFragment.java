@@ -57,7 +57,8 @@ public class FeedDetailFragment extends Fragment
         summaryView.setText(mDescription);
         WebView contentView = (WebView)parent.findViewById(R.id.txtContent);
         // Remove fixed widths
-        String replacedString = mContent.replaceAll("width=\"[a-zA-Z0-9 ]*\"", "width=\"100%\"");
+        String replacedString = "<html><body>"+mContent.replaceAll("width=\"[a-zA-Z0-9 ]*\"", "width=\"100%\"")+"</html></body>";
+        contentView.getSettings().setJavaScriptEnabled(true);
         contentView.loadData(replacedString, "text/html", "UTF-8");
 
         return parent;
