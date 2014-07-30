@@ -14,7 +14,6 @@ public class RSSItem implements Serializable
     public String date;
     public String author;
     public String description;
-    public String imageUrl;
     public String link;
     public String content;
 }
