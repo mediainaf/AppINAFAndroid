@@ -59,7 +59,7 @@ public class FeedDetailFragment extends Fragment
         // Remove fixed widths
         String replacedString = "<html><body>"+mContent.replaceAll("width=\"[a-zA-Z0-9 ]*\"", "width=\"100%\"")+"</html></body>";
         contentView.getSettings().setJavaScriptEnabled(true);
-        contentView.loadData(replacedString, "text/html", "UTF-8");
+        contentView.loadDataWithBaseURL("", replacedString, "text/html", "UTF-8", null);
 
         return parent;
     }
