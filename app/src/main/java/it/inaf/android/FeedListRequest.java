@@ -188,8 +188,7 @@ public class FeedListRequest extends Fragment {
                     rssItem.link = xpath.evaluate("link/text()", item);
                     NodeList nlist = item.getElementsByTagNameNS("http://purl.org/rss/1.0/modules/content/", "encoded");
                     String contentCDATA = nlist.item(0).getTextContent();
-                    //rssItem.content = contentCDATA.replaceAll("\\<.*?>","");
-                    rssItem.content = contentCDATA;
+                    rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
                     nlist = item.getElementsByTagNameNS("http://purl.org/dc/elements/1.1/", "creator");
                     rssItem.author = nlist.item(0).getTextContent();
                     String descriptionCDATA = xpath.evaluate("description/text()", item);
