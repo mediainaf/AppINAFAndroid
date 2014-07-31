@@ -50,6 +50,7 @@ public class FeedDetailActivity extends NavigationDrawerActivity {
             Intent upIntent = NavUtils.getParentActivityIntent(this);
             upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             NavUtils.navigateUpTo(this, upIntent);
+            overridePendingTransition(0, 0);
 //            NavUtils.navigateUpFromSameTask(this);
 
             return true;

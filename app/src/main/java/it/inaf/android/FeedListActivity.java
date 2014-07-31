@@ -116,6 +116,7 @@ public class FeedListActivity extends NavigationDrawerActivity
         Intent detailIntent = new Intent(this, FeedDetailActivity.class);
         detailIntent.putExtras(args);
         startActivity(detailIntent);
+        overridePendingTransition(0, 0);
     }
 
     @Override
