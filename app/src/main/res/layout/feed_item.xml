@@ -9,8 +9,7 @@
     android:layout_width="96dp"
     android:layout_height="96dp"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentTop="true"
-    android:src="@drawable/ic_launcher" />
+    android:layout_alignParentTop="true" />
   <LinearLayout
     android:id="@+id/vlayout1"
     android:orientation="vertical"

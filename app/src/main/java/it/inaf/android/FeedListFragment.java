@@ -20,6 +20,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+
 import java.util.ArrayList;
 
 public class FeedListFragment extends ListFragment
@@ -178,6 +181,30 @@ public class FeedListFragment extends ListFragment
 
     private class RSSListAdapter extends ArrayAdapter<RSSItem>
     {
+        public class RSSImageListener implements ImageLoader.ImageListener
+        {
+            private ImageView mImage;
+            private String mUrl;
+
+            RSSImageListener(ImageView image) {
+                mImage = image;
+                mUrl = image.getTag().toString();
+            }
+
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                if (response.getBitmap() != null) {
+                    if (mImage.getTag().toString().equals(mUrl))
+                        mImage.setImageBitmap(response.getBitmap());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // TODO handle volley errors
+            }
+        }
+
         private Context mContext;
         private ArrayList<RSSItem> objects = null;
 
@@ -209,7 +236,6 @@ public class FeedListFragment extends ListFragment
         public View getView(int position, View convertView, ViewGroup parent)
         {
             ViewHolder holder;
-
             if(convertView == null)
             {
                 LayoutInflater li = LayoutInflater.from(mContext);
@@ -230,32 +256,32 @@ public class FeedListFragment extends ListFragment
 
             RSSItem data = objects.get(position);
 
-            if(data != null)
-            {
-                // TODO handle image
-/*                Picasso.with(getActivity())
-                    .load(data.imageUrl)
-                    .into(holder.image);*/
+            if(data == null)
+                return convertView;
 
-                holder.title.setText(data.title);
-                holder.subtitle.setText(data.author+" / "+data.date);
-                holder.description.setText(data.description);
+            holder.title.setText(data.title);
+            holder.subtitle.setText(data.author+" / "+data.date);
+            holder.description.setText(data.description);
 
-                // set description number of lines based on the title and data heights.
-                Rect bounds = new Rect();
-                Paint textPaint = holder.title.getPaint();
-                textPaint.getTextBounds(data.title, 0, data.title.length(), bounds);
-                double textWidth = bounds.width();
-                holder.title.measure(MeasureSpec.UNSPECIFIED,MeasureSpec.UNSPECIFIED);
-                double titleViewWidth = holder.title.getMeasuredWidth();
-                int titleNLines = (int) Math.ceil( textWidth / titleViewWidth);
-                int heightTitle = titleNLines * holder.title.getLineHeight();
-                int heightDate = holder.subtitle.getLineHeight();
-                int heightContainer = convertView.findViewById(R.id.vlayout1).getLayoutParams().height; // this has to be fixed
-                int heightDescription = heightContainer - heightTitle - heightDate;
-                int descNLines = (int) heightDescription / holder.description.getLineHeight();
-                holder.description.setLines(descNLines);
-            }
+            // set description number of lines based on the title and data heights.
+            Rect bounds = new Rect();
+            Paint textPaint = holder.title.getPaint();
+            textPaint.getTextBounds(data.title, 0, data.title.length(), bounds);
+            double textWidth = bounds.width();
+            holder.title.measure(MeasureSpec.UNSPECIFIED,MeasureSpec.UNSPECIFIED);
+            double titleViewWidth = holder.title.getMeasuredWidth();
+            int titleNLines = (int) Math.ceil( textWidth / titleViewWidth);
+            int heightTitle = titleNLines * holder.title.getLineHeight();
+            int heightDate = holder.subtitle.getLineHeight();
+            int heightContainer = convertView.findViewById(R.id.vlayout1).getLayoutParams().height; // this has to be fixed
+            int heightDescription = heightContainer - heightTitle - heightDate;
+            int descNLines = (int) heightDescription / holder.description.getLineHeight();
+            holder.description.setLines(descNLines);
+
+            holder.image.setTag(data.imageUrl);
+            holder.image.setImageResource(R.drawable.empty);
+            INAF.imageLoader.get(data.imageUrl, new RSSImageListener(holder.image));
+
             return convertView;
         }
     }
