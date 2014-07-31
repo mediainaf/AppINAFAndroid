@@ -193,6 +193,11 @@ public class FeedListRequest extends Fragment {
                     rssItem.author = nlist.item(0).getTextContent();
                     String descriptionCDATA = xpath.evaluate("description/text()", item);
                     rssItem.description = descriptionCDATA.replaceAll("\\<.*?>","") + ".";
+                    // find the image url inside the description
+                    Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)",Pattern.CASE_INSENSITIVE);
+                    Matcher m = p.matcher(descriptionCDATA);
+                    m.find();
+                    rssItem.imageUrl = m.group(1);
                     itemList.add(rssItem);
                 }
             }
