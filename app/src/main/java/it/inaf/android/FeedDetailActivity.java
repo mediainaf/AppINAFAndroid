@@ -23,9 +23,8 @@ public class FeedDetailActivity extends NavigationDrawerActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.fragment_feed_detail);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
 
         if (savedInstanceState == null) {
             FeedDetailFragment fragment = new FeedDetailFragment();
