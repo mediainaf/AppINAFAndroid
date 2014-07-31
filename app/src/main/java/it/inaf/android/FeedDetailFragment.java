@@ -74,4 +74,11 @@ public class FeedDetailFragment extends Fragment
         outState.putString("description", mDescription);
         outState.putString("content", mContent);
     }
- }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        WebView contentView = (WebView)getActivity().findViewById(R.id.txtContent);
+        contentView.onPause();
+    }
+}

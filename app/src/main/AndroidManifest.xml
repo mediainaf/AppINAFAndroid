@@ -28,6 +28,7 @@
         <activity
             android:name=".FeedDetailActivity"
             android:label="@string/title_feed_detail"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:parentActivityName=".FeedListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
