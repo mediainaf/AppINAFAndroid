@@ -165,7 +165,7 @@ public class FeedListRequest extends Fragment {
                 e.printStackTrace();
             }
 
-            SimpleDateFormat postFormater = new SimpleDateFormat("dd.mm.yyyy", Locale.ITALY);
+            SimpleDateFormat postFormater = new SimpleDateFormat("dd.MM.yyyy", Locale.ITALY);
             return postFormater.format(tmpDate);
         }
 
