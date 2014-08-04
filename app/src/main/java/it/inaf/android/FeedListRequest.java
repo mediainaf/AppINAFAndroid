@@ -17,23 +17,24 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
 import org.apache.http.protocol.HTTP;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filters;
+import org.jdom2.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 /**
  * VolleyStringRequest manages a single background volley string request and retains itself across
@@ -152,6 +153,8 @@ public class FeedListRequest extends Fragment {
 
     private class ResponseListener implements Response.Listener<String> {
 
+        SAXBuilder mBuilder = new SAXBuilder();
+
         private String formatDate(String date)
         {
             SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
@@ -171,41 +174,38 @@ public class FeedListRequest extends Fragment {
 
         @Override
         public void onResponse(String response) {
-            XPathFactory factory = XPathFactory.newInstance();
-            XPath xpath = factory.newXPath();
-
             ArrayList<RSSItem> itemList = new ArrayList<RSSItem>();
 
             try {
-                String query = "//rss/channel/item";
-                InputSource source = new InputSource(new StringReader(response));
-                NodeList items = (NodeList) xpath.evaluate(query, source, XPathConstants.NODESET);
+                Document doc = mBuilder.build(new InputSource(new StringReader(response)));
 
-                for(int i=0; i < items.getLength(); i++)
-                {
+                List<Element> items = doc.getContent(Filters.element()).get(0).getChild("channel").getChildren("item");
+
+                for (int i=0; i < items.size(); i++) {
                     RSSItem rssItem = new RSSItem();
-                    Element item = (Element) items.item(i);
-                    rssItem.title = xpath.evaluate("title/text()", item);
-                    rssItem.date = formatDate(xpath.evaluate("pubDate/text()", item));
-                    rssItem.link = xpath.evaluate("link/text()", item);
-                    NodeList nlist = item.getElementsByTagNameNS("http://purl.org/rss/1.0/modules/content/", "encoded");
-                    String contentCDATA = nlist.item(0).getTextContent();
-                    rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
-                    nlist = item.getElementsByTagNameNS("http://purl.org/dc/elements/1.1/", "creator");
-                    rssItem.author = nlist.item(0).getTextContent();
-                    String descriptionCDATA = xpath.evaluate("description/text()", item);
-                    rssItem.description = descriptionCDATA.replaceAll("\\<.*?>","") + ".";
+                    Element item = items.get(i);
+
+                    rssItem.title = item.getChild("title").getText();
+                    rssItem.date = item.getChild("pubDate").getText();
+                    rssItem.link = item.getChild("link").getText();
+                    Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
+                    rssItem.author = authorElement.getText();
+                    rssItem.description = item.getChild("description").getText();
                     // find the image url inside the description
-                    Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)",Pattern.CASE_INSENSITIVE);
-                    Matcher m = p.matcher(descriptionCDATA);
+                    Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
+                    Matcher m = p.matcher(rssItem.description);
                     m.find();
                     rssItem.imageUrl = m.group(1);
+                    Element contentElement = item.getChild("encoded", Namespace.getNamespace("http://purl.org/rss/1.0/modules/content/"));
+                    String contentCDATA = contentElement.getText();
+                    rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
+
                     itemList.add(rssItem);
                 }
-            }
-            catch(XPathExpressionException e)
-            {
-                e.printStackTrace();
+            } catch (JDOMException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
 
             if(mCallbacks != null)
