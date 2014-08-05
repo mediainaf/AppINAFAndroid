@@ -26,6 +26,8 @@ public class NavigationDrawerActivity extends ActionBarActivity
     */
     protected String mTitle;
 
+    protected int mPosition = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +39,20 @@ public class NavigationDrawerActivity extends ActionBarActivity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 fm.findFragmentById(R.id.navigation_drawer);
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            mPosition = extras.getInt("nav_position");
+        }
+
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                (DrawerLayout) findViewById(R.id.drawer_layout), mPosition);
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        mPosition = position;
 
         // update the main content by replacing fragments
         switch (position) {
@@ -57,6 +65,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
+                feedListIntent.putExtra("nav_position", position);
                 startActivity(feedListIntent);
                 finish();
                 overridePendingTransition(0, 0);
@@ -67,6 +76,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/eventi/feed");
+                feedListIntent.putExtra("nav_position", position);
                 startActivity(feedListIntent);
                 finish();
                 overridePendingTransition(0, 0);
