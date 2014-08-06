@@ -190,10 +190,11 @@ public class FeedListRequest extends Fragment {
                     rssItem.link = item.getChild("link").getText();
                     Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
                     rssItem.author = authorElement.getText();
-                    rssItem.description = item.getChild("description").getText();
+                    String descriptionCDATA = item.getChild("description").getText();
+                    rssItem.description = descriptionCDATA.replaceAll("\\<.*?>","");
                     // find the image url inside the description
                     Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
-                    Matcher m = p.matcher(rssItem.description);
+                    Matcher m = p.matcher(descriptionCDATA);
                     m.find();
                     rssItem.imageUrl = m.group(1);
                     Element contentElement = item.getChild("encoded", Namespace.getNamespace("http://purl.org/rss/1.0/modules/content/"));
