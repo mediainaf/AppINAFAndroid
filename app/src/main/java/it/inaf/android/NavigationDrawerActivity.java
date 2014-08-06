@@ -58,6 +58,12 @@ public class NavigationDrawerActivity extends ActionBarActivity
         switch (position) {
             case 0: {
                 mTitle = getString(R.string.title_section1);
+                Intent feedListIntent = new Intent(this, HomeActivity.class);
+                feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                feedListIntent.putExtra("nav_position", position);
+                startActivity(feedListIntent);
+                finish();
+                overridePendingTransition(0, 0);
                 break;
             }
             case 1: { // news
