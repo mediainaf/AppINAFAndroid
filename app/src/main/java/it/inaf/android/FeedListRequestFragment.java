@@ -36,43 +36,30 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * VolleyStringRequest manages a single background volley string request and retains itself across
- * configuration changes.
- */
-public class FeedListRequest extends Fragment {
+public class FeedListRequestFragment extends Fragment {
 
-    /**
-     * Callback interface through which the fragment can report the task's
-     * results back to the Activity.
-     */
-    static interface VolleyCallbacks {
+    static interface Callbacks {
         void onResponse(ArrayList<RSSItem> itemList);
         void onError(VolleyError error);
     }
 
     private static final boolean DEBUG = true;
-    private static final String TAG = FeedListRequest.class.getSimpleName();
+    private static final String TAG = FeedListRequestFragment.class.getSimpleName();
 
-    private VolleyCallbacks mCallbacks;
+    private Callbacks mCallbacks;
     private boolean mRunning;
 
-    /**
-     * Hold a reference to the parent Activity so we can report the task's current
-     * progress and results. The Android framework will pass us a reference to the
-     * newly created Activity after each configuration change.
-     */
     @Override
     public void onAttach(Activity activity) {
         if (DEBUG) Log.i(TAG, "onAttach(Activity)");
         super.onAttach(activity);
-        if (!(activity instanceof VolleyCallbacks)) {
-            throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
+
+        if (!(activity instanceof FeedListRequestFragment.Callbacks)) {
+            throw new IllegalStateException("Activity must implement the FeedListRequestFragment interface.");
         }
 
-        // Hold a reference to the parent Activity so we can report back the task's
-        // current progress and results.
-        mCallbacks = (VolleyCallbacks) activity;
+        // Update the activity reference at start and on configuration changes.
+        mCallbacks = (Callbacks) activity;
     }
 
     @Override
@@ -186,7 +173,7 @@ public class FeedListRequest extends Fragment {
                     Element item = items.get(i);
 
                     rssItem.title = item.getChild("title").getText();
-                    rssItem.date = item.getChild("pubDate").getText();
+                    rssItem.date = formatDate(item.getChild("pubDate").getText());
                     rssItem.link = item.getChild("link").getText();
                     Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
                     rssItem.author = authorElement.getText();
@@ -224,18 +211,12 @@ public class FeedListRequest extends Fragment {
         }
     }
 
-    /**
-     * Start the volley request.
-     */
     public void start(int method, String url) {
         StringUTF8Request request = new StringUTF8Request(method, url, new ResponseListener(), new ErrorListener());
         INAF.requestQueue.add(request);
         mRunning = true;
     }
 
-    /**
-     * Cancel the volley request.
-     */
     public void cancel() {
         if (mRunning) {
             // TODO cancel volley request
@@ -244,9 +225,6 @@ public class FeedListRequest extends Fragment {
         }
     }
 
-    /**
-     * Returns the current state of the request.
-     */
     public boolean isRunning() {
         return mRunning;
     }

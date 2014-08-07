@@ -14,18 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class NavigationDrawerActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.Callbacks {
 
-    /**
-    * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-    */
     protected NavigationDrawerFragment mNavigationDrawerFragment;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-    */
     protected String mTitle;
-
     protected int mPosition = 0;
 
     @Override
@@ -54,7 +47,6 @@ public class NavigationDrawerActivity extends ActionBarActivity
     public void onNavigationDrawerItemSelected(int position) {
         mPosition = position;
 
-        // update the main content by replacing fragments
         switch (position) {
             case 0: {
                 mTitle = getString(R.string.title_section1);
@@ -66,7 +58,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 overridePendingTransition(0, 0);
                 break;
             }
-            case 1: { // news
+            case 1: {
                 mTitle = getString(R.string.title_section2);
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -77,7 +69,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 overridePendingTransition(0, 0);
                 break;
             }
-            case 2: { // eventi
+            case 2: {
                 mTitle = getString(R.string.title_section3);
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -121,11 +113,5 @@ public class NavigationDrawerActivity extends ActionBarActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
     }
 }

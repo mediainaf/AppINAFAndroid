@@ -15,16 +15,9 @@ import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 
-/**
- * VolleyStringRequest manages a single background volley string request and retains itself across
- * configuration changes.
- */
 public class JSONRequestFragment extends Fragment {
 
-    /**
-     * Callback interface through which the fragment can report the task's
-     * results back to the Activity.
-     */
+
     static interface Callbacks {
         void onResponse(JSONArray response);
         void onError(VolleyError error);
@@ -36,21 +29,16 @@ public class JSONRequestFragment extends Fragment {
     private Callbacks mCallbacks;
     private boolean mRunning;
 
-    /**
-     * Hold a reference to the parent Activity so we can report the task's current
-     * progress and results. The Android framework will pass us a reference to the
-     * newly created Activity after each configuration change.
-     */
     @Override
     public void onAttach(Activity activity) {
         if (DEBUG) Log.i(TAG, "onAttach(Activity)");
         super.onAttach(activity);
+
         if (!(activity instanceof JSONRequestFragment.Callbacks)) {
-            throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
+            throw new IllegalStateException("Activity must implement the JSONRequestFragment interface.");
         }
 
-        // Hold a reference to the parent Activity so we can report back the task's
-        // current progress and results.
+        // Update the activity reference at start and on configuration changes.
         mCallbacks = (Callbacks) activity;
     }
 

@@ -16,15 +16,11 @@ import com.android.volley.VolleyError;
 import java.util.ArrayList;
 
 public class FeedListActivity extends NavigationDrawerActivity
-        implements FeedListRequest.VolleyCallbacks, FeedListFragment.Callbacks {
+        implements FeedListRequestFragment.Callbacks, FeedListFragment.Callbacks {
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
 //    private boolean mTwoPane;
 
-    FeedListRequest mFeedListRequest;
+    FeedListRequestFragment mFeedListRequest;
 
     boolean mLoading = false;
 
@@ -33,12 +29,10 @@ public class FeedListActivity extends NavigationDrawerActivity
         super.onCreate(savedInstanceState);
 
         FragmentManager fm = getSupportFragmentManager();
-        mFeedListRequest = (FeedListRequest) fm.findFragmentByTag("feed_list_request");
+        mFeedListRequest = (FeedListRequestFragment) fm.findFragmentByTag("feed_list_request");
 
         if (mFeedListRequest == null) {
-            // if we aren't on a configuration change add the retained request to the
-            // FragmentManager
-            mFeedListRequest = new FeedListRequest();
+            mFeedListRequest = new FeedListRequestFragment();
             fm.beginTransaction().add(mFeedListRequest, "feed_list_request").commit();
         }
 
@@ -111,8 +105,6 @@ public class FeedListActivity extends NavigationDrawerActivity
                     .replace(R.id.item_detail_container, fragment)
                     .commit();
         }*/
-        // In single-pane mode, simply start the detail activity
-        // for the selected item ID.
         Intent detailIntent = new Intent(this, FeedDetailActivity.class);
         detailIntent.putExtras(args);
         startActivity(detailIntent);
