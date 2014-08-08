@@ -12,14 +12,16 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class JSONRequestFragment extends Fragment {
 
-
     static interface Callbacks {
-        void onResponse(JSONArray response);
+        void onResponseArray(int id, JSONArray response);
+        void onResponse(int id, JSONObject response);
         void onError(VolleyError error);
     }
 
@@ -28,6 +30,7 @@ public class JSONRequestFragment extends Fragment {
 
     private Callbacks mCallbacks;
     private boolean mRunning;
+    private int mId;
 
     @Override
     public void onAttach(Activity activity) {
@@ -92,12 +95,22 @@ public class JSONRequestFragment extends Fragment {
         super.onStop();
     }
 
-    private class ResponseListener implements Response.Listener<JSONArray> {
+    private class ResponseListenerArray implements Response.Listener<JSONArray> {
 
         @Override
         public void onResponse(JSONArray response) {
             if(mCallbacks != null)
-                mCallbacks.onResponse(response);
+                mCallbacks.onResponseArray(mId, response);
+            mRunning = false;
+        }
+    }
+
+    private class ResponseListener implements Response.Listener<JSONObject> {
+
+        @Override
+        public void onResponse(JSONObject response) {
+            if(mCallbacks != null)
+                mCallbacks.onResponse(mId, response);
             mRunning = false;
         }
     }
@@ -114,9 +127,18 @@ public class JSONRequestFragment extends Fragment {
     /**
      * Start the volley request.
      */
-    public void start(String url) {
-        JsonArrayRequest request = new JsonArrayRequest(url, new ResponseListener(), new ErrorListener());
-        INAF.requestQueue.add(request);
+    public void start(int id, String url, boolean isArray) {
+        mId = id;
+
+        if(isArray) {
+            JsonArrayRequest request = new JsonArrayRequest(url, new ResponseListenerArray(), new ErrorListener());
+            INAF.requestQueue.add(request);
+        }
+        else {
+            JsonObjectRequest request = new JsonObjectRequest(url, null, new ResponseListener(), new ErrorListener());
+            INAF.requestQueue.add(request);
+        }
+
         mRunning = true;
     }
 
