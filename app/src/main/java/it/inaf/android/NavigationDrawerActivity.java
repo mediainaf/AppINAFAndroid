@@ -80,6 +80,16 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 overridePendingTransition(0, 0);
                 break;
             }
+            case 3: {
+                mTitle = getString(R.string.title_section4);
+                Intent videoGalleryIntent = new Intent(this, VideoGalleryActivity.class);
+                videoGalleryIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                videoGalleryIntent.putExtra("nav_position", position);
+                startActivity(videoGalleryIntent);
+                finish();
+                overridePendingTransition(0, 0);
+                break;
+            }
         }
     }
 

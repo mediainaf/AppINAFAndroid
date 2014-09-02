@@ -20,9 +20,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-
 import java.util.ArrayList;
 
 public class FeedListFragment extends ListFragment
@@ -167,30 +164,6 @@ public class FeedListFragment extends ListFragment
 
     private class RSSListAdapter extends ArrayAdapter<RSSItem>
     {
-        public class RSSImageListener implements ImageLoader.ImageListener
-        {
-            private ImageView mImage;
-            private String mUrl;
-
-            RSSImageListener(ImageView image) {
-                mImage = image;
-                mUrl = image.getTag().toString();
-            }
-
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null) {
-                    if (mImage.getTag().toString().equals(mUrl))
-                        mImage.setImageBitmap(response.getBitmap());
-                }
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO handle volley errors
-            }
-        }
-
         private Context mContext;
         private ArrayList<RSSItem> objects = null;
 
@@ -266,7 +239,7 @@ public class FeedListFragment extends ListFragment
 
             holder.image.setTag(data.imageUrl);
             holder.image.setImageResource(R.drawable.empty);
-            INAF.imageLoader.get(data.imageUrl, new RSSImageListener(holder.image));
+            INAF.imageLoader.get(data.imageUrl, new ImageListener(holder.image));
 
             return convertView;
         }

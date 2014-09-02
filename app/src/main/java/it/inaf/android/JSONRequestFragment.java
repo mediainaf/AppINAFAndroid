@@ -119,7 +119,8 @@ public class JSONRequestFragment extends Fragment {
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            mCallbacks.onError(error);
+            if(mCallbacks != null)
+                mCallbacks.onError(error);
             mRunning = false;
         }
     }

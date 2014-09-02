@@ -34,6 +34,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".FeedListActivity" />
         </activity>
+
+        <activity
+            android:name=".VideoGalleryActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:label="@string/title_section4">
+        </activity>
     </application>
 
 </manifest>
