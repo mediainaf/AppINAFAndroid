@@ -4,6 +4,7 @@
 
 package it.inaf.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -29,6 +31,32 @@ public class VideoGalleryFragment extends Fragment {
     int mThumbSize = 0;
     int mThumbSpacing = 0;
     GridView mGridView;
+
+    private Callbacks mCallbacks = sDummyCallbacks;
+
+    public interface Callbacks
+    {
+        // Called when a feed in the list is selected.
+        void onItemSelected(Bundle args);
+    }
+
+    private static Callbacks sDummyCallbacks = new Callbacks() {
+        @Override
+        public void onItemSelected(Bundle args) {
+        }
+    };
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +96,22 @@ public class VideoGalleryFragment extends Fragment {
         mVideoAdapter = new VideoListAdapter(getActivity(), R.layout.video_gallery_fragment, mItemList);
         mGridView = (GridView) getActivity().findViewById(R.id.video_gallery);
         mGridView.setAdapter(mVideoAdapter);
+        mGridView.setOnItemClickListener(new GridView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                VideoItem item = mItemList.get(position);
+
+                Bundle args = new Bundle();
+                args.putString("title", item.title);
+                args.putString("date", item.date);
+                args.putString("thumbnailUrl", item.thumbnailUrl);
+                args.putString("videoUrl", item.videoUrl);
+                args.putString("visCounter", item.visualizationCounter);
+                args.putString("description", item.description);
+                args.putInt("position", position);
+                mCallbacks.onItemSelected(args);
+            }
+        } );
 
         mThumbSize = getResources().getDimensionPixelSize(R.dimen.thumb_size);
         mThumbSpacing = 0;//getResources().getDimensionPixelSize(R.dimen.thumb_spacing);
@@ -188,7 +232,7 @@ public class VideoGalleryFragment extends Fragment {
             holder.thumbnail.setImageResource(R.drawable.empty);
             holder.title.setText(item.title);
             holder.visCounter.setText(item.visualizationCounter);
-            holder.date.setText("today");
+            holder.date.setText(item.date);
 
             INAF.imageLoader.get(item.thumbnailUrl, new ImageListener(holder.thumbnail));
 

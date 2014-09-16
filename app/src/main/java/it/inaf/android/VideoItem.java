@@ -13,4 +13,5 @@ public class VideoItem implements Serializable
     public String thumbnailUrl;
     public String date;
     public String visualizationCounter;
+    public String description;
 }

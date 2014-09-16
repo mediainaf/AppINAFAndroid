@@ -28,11 +28,8 @@ import org.xml.sax.InputSource;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -142,22 +139,7 @@ public class FeedListRequestFragment extends Fragment {
 
         SAXBuilder mBuilder = new SAXBuilder();
 
-        private String formatDate(String date)
-        {
-            SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
-            java.util.Date tmpDate = null;
-            try
-            {
-                tmpDate = format.parse(date);
-            }
-            catch(ParseException e)
-            {
-                e.printStackTrace();
-            }
 
-            SimpleDateFormat postFormater = new SimpleDateFormat("dd.MM.yyyy", Locale.ITALY);
-            return postFormater.format(tmpDate);
-        }
 
         @Override
         public void onResponse(String response) {
@@ -173,7 +155,7 @@ public class FeedListRequestFragment extends Fragment {
                     Element item = items.get(i);
 
                     rssItem.title = item.getChild("title").getText();
-                    rssItem.date = formatDate(item.getChild("pubDate").getText());
+                    rssItem.date = DateFormatter.format(item.getChild("pubDate").getText());
                     rssItem.link = item.getChild("link").getText();
                     Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
                     rssItem.author = authorElement.getText();

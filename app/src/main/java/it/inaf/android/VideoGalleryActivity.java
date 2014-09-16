@@ -4,6 +4,7 @@
 
 package it.inaf.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -18,7 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class VideoGalleryActivity extends NavigationDrawerActivity
-        implements JSONRequestFragment.Callbacks {
+        implements JSONRequestFragment.Callbacks, VideoGalleryFragment.Callbacks {
 
 //    private boolean mTwoPane;
 
@@ -85,10 +86,11 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
                     item.title = entry.getJSONObject("title").getString("$t");
                     String url = entry.getJSONObject("id").getString("$t");
                     String youtubeId = url.substring(url.replaceAll("\\\\", "/").lastIndexOf("/"));
-                    item.videoUrl = "<body><div class='embed-container'><iframe src=\"http://www.youtube.com/embed/" + youtubeId + "?modestbranding=1&showinfo=0\" frameborder=\"0\" allowfullscreen></iframe></div></body>";
-                    item.date = entry.getJSONObject("published").getString("$t");
+                    item.videoUrl = "<body style='margin:0;padding:0;'><div class='embed-container'><iframe src=\"http://www.youtube.com/embed/" + youtubeId + "?modestbranding=1&showinfo=0\" frameborder=\"0\" allowfullscreen></iframe></div></body>";
+                    item.date = DateFormatter.format(entry.getJSONObject("published").getString("$t"));
                     item.thumbnailUrl = entry.getJSONObject("media$group").getJSONArray("media$thumbnail").getJSONObject(0).getString("url");
                     item.visualizationCounter = entry.getJSONObject("yt$statistics").getString("viewCount");
+                    item.description = entry.getJSONObject("content").getString("$t");
 
                     list.add(item);
                 }
@@ -108,5 +110,25 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
     @Override
     public void onError(VolleyError error) {
         Log.e("Error", "Error on loading video feed");
+    }
+
+    @Override
+    public void onItemSelected(Bundle args) {
+/*      if (mTwoPane) { TODO handle item selection
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putString(FeedDetailFragment.ARG_ITEM_ID, args.getString(ITEM_ID));
+            FeedDetailFragment fragment = new FeedDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.item_detail_container, fragment)
+                    .commit();
+        }*/
+        Intent detailIntent = new Intent(this, VideoDetailActivity.class);
+        detailIntent.putExtras(args);
+        startActivity(detailIntent);
+        overridePendingTransition(0, 0);
     }
 }
