@@ -1,51 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/video_detail_container">
-    <LinearLayout
+    android:layout_height="match_parent">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/video_detail_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Title"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
-        <WebView
-            android:id="@+id/video_detail_video"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/video_detail_container">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignBottom="@+id/video_detail_infos">
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/video_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Title"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+            <it.inaf.android.VideoEnabledWebView
+                android:id="@+id/video_detail_video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignBottom="@+id/video_detail_infos">
 
+                <TextView
+                    android:id="@+id/video_detail_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Today"
+                    android:textSize="12sp"/>
+                <TextView
+                    android:id="@+id/video_detail_viscounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:text="Visualizzazioni"
+                    android:textSize="12sp"/>
+            </LinearLayout>
             <TextView
-                android:id="@+id/video_detail_date"
+                android:id="@+id/video_detail_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Today"
-                android:textSize="12sp"/>
-            <TextView
-                android:id="@+id/video_detail_viscounter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_weight="1"
-                android:text="Visualizzazioni"
-                android:textSize="12sp"/>
+                android:layout_marginTop="10sp"
+                android:text="Descrizione"/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/video_detail_description"
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/video_detail_fs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <View
+            android:id="@+id/video_detail_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
-            android:text="Descrizione"/>
-    </LinearLayout>
-</ScrollView>
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</RelativeLayout>

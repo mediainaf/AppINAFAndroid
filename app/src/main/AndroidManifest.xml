@@ -44,6 +44,7 @@
         <activity
             android:name=".VideoDetailActivity"
             android:label="@string/title_video_detail"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:parentActivityName=".VideoGalleryActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
