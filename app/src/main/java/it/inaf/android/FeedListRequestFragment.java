@@ -160,7 +160,13 @@ public class FeedListRequestFragment extends Fragment {
                     Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
                     rssItem.author = authorElement.getText();
                     String descriptionCDATA = item.getChild("description").getText();
-                    rssItem.description = descriptionCDATA.replaceAll("\\<.*?>","");
+                    String descClean = descriptionCDATA.replaceAll("<(.*?)\\>"," "); //Removes all items in brackets
+                    descClean = descClean.replaceAll("<(.*?)\\\n"," "); //Must be undeneath
+                    descClean = descClean.replaceFirst("(.*?)\\>", " "); //Removes any connected item to the last bracket
+                    descClean = descClean.replaceAll("&nbsp;"," ");
+                    descClean = descClean.replaceAll("&amp;"," ");
+                    descClean = descClean.replaceAll("&amp;"," ");
+                    rssItem.description = descClean.trim();
                     // find the image url inside the description
                     Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
                     Matcher m = p.matcher(descriptionCDATA);
