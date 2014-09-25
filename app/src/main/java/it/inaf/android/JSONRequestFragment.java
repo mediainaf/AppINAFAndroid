@@ -25,7 +25,7 @@ public class JSONRequestFragment extends Fragment {
         void onError(VolleyError error);
     }
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String TAG = JSONRequestFragment.class.getSimpleName();
 
     private Callbacks mCallbacks;
