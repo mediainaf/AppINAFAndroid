@@ -5,6 +5,7 @@
 package it.inaf.android;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -136,6 +137,16 @@ public class VideoDetailFragment extends Fragment {
 
         WebView contentView = (WebView) getActivity().findViewById(R.id.video_detail_video);
         contentView.onPause();
+
+        // Fix bug on HTML5 WebView audio still going after pause..
+        ((AudioManager)getActivity().getSystemService(
+                Context.AUDIO_SERVICE)).requestAudioFocus(
+                new AudioManager.OnAudioFocusChangeListener() {
+                    @Override
+                    public void onAudioFocusChange(int focusChange) {
+                    }
+                }, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
     }
 
     public boolean onBackPressed() {
