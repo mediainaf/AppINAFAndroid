@@ -4,49 +4,48 @@
 
 package it.inaf.android;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HomeDetailFragment extends Fragment {
-
-    private static final String mDetailUrl = "http://app.media.inaf.it/GetAbout.php";
-    private static final String mImageUrl = "http://app.media.inaf.it/GetSplashImage.php";
+    String mDescription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        JSONRequestFragment requestDetails = (JSONRequestFragment) fm.findFragmentByTag("json_request1");
-        if (requestDetails == null) {
-            requestDetails = new JSONRequestFragment();
-            fm.beginTransaction().add(requestDetails, "json_request1").commit();
+        try {
+            JSONObject obj = INAF.jsonAbout.getJSONObject(0);
+            mDescription = obj.getString("descr");
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        requestDetails.start(HomeActivity.JSON_HOME_DETAILS, mDetailUrl, true);
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width=dm.widthPixels;
-        int height=dm.heightPixels;
-        String imageUrl = mImageUrl + "?width=" + width + "&height=" + height + "&deviceName=android";
-
-        JSONRequestFragment requestImage = (JSONRequestFragment) fm.findFragmentByTag("json_request2");
-        if (requestImage == null) {
-            requestImage = new JSONRequestFragment();
-            fm.beginTransaction().add(requestImage, "json_request2").commit();
-        }
-        requestImage.start(HomeActivity.JSON_HOME_SPLASH_IMAGE, imageUrl, false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.home_detail_fragment, container, false);
+        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.home_detail_fragment, container, false);
+
+        TextView textView = (TextView) layout.findViewById(R.id.homeText);
+        textView.setText(mDescription);
+
+        double ratio = 0.7;
+        textView.setWidth((int) (INAF.width * ratio));
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            layout.setBackground(INAF.homeBackground);
+        else
+            layout.setBackgroundDrawable(INAF.homeBackground);
 
         return layout;
     }

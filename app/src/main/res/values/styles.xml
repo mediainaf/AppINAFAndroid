@@ -1,14 +1,16 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
     </style>
-
 
     <style name="VideoGrid">
         <item name="android:drawSelectorOnTop">true</item>
         <item name="android:listSelector">@drawable/photogrid_selector</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowActionBar">false</item>
     </style>
 
 </resources>

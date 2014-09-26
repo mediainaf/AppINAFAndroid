@@ -7,6 +7,7 @@ package it.inaf.android;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.Display;
@@ -17,6 +18,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class INAF extends Application {
 
@@ -29,6 +33,12 @@ public class INAF extends Application {
     public static int width;
     public static int height;
     public static float aspectRatio;
+
+    public static String aboutUrl = "http://app.media.inaf.it/GetAbout.php";
+    public static JSONArray jsonAbout;
+    public static String homeImageUrl = "http://app.media.inaf.it/GetSplashImage.php";
+    public static JSONObject jsonHomeImage;
+    public static BitmapDrawable homeBackground;
 
     @Override
     public void onCreate() {
