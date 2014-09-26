@@ -7,6 +7,7 @@ package it.inaf.android;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -115,6 +116,8 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setHomeButtonEnabled(true);
+        int id = getResources().getIdentifier("title_section"+(position+1), "string", getActivity().getPackageName());
+        actionBar.setTitle(getString(id));
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),
@@ -228,7 +231,6 @@ public class NavigationDrawerFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(R.string.app_name);
     }
 
     private ActionBar getActionBar() {

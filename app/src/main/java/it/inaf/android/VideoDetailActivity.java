@@ -25,6 +25,8 @@ public class VideoDetailActivity extends NavigationDrawerActivity {
                     .add(R.id.container, fragment)
                     .commit();
         }
+
+        getActionBar().setTitle("");
     }
 
     @Override

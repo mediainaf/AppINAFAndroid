@@ -25,6 +25,8 @@ public class FeedDetailActivity extends NavigationDrawerActivity {
                     .add(R.id.container, fragment)
                     .commit();
         }
+
+        getActionBar().setTitle("");
     }
 
     @Override
