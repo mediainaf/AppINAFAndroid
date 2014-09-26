@@ -6,6 +6,12 @@ package it.inaf.android;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Point;
+import android.os.Build;
+import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -20,6 +26,10 @@ public class INAF extends Application {
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
+    public static int width;
+    public static int height;
+    public static float aspectRatio;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,6 +41,32 @@ public class INAF extends Application {
         VolleyLog.setTag("MyAppTag");
         // http://stackoverflow.com/a/17035814
         imageLoader.setBatchedResponseDelay(0);
+
+        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            display.getSize(size);
+            width = size.x;
+            height = size.y;
+        }
+        else {
+            width = display.getWidth();  // deprecated
+            height = display.getHeight();  // deprecated
+        }
+        int r = display.getRotation();
+        if(r == Surface.ROTATION_90 || r == Surface.ROTATION_270) {
+            int tmp = width;
+            width = height;
+            height = tmp;
+        }
+
+        if(width > height)
+            aspectRatio = width / (float)height;
+        else
+            aspectRatio = height / (float)width;
+
+        Log.i("Info", "Width: " + width + " Height: " + height + "Aspect Ratio: " + aspectRatio);
     }
 
     public static BitmapLruCache getBitmapCache() {
