@@ -148,16 +148,4 @@ public class VideoDetailFragment extends Fragment {
                 }, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
     }
-
-    public boolean onBackPressed() {
-        if (!mWebChromeClient.onBackPressed()) {
-            if (mWebView.canGoBack()) {
-                mWebView.goBack();
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
 }

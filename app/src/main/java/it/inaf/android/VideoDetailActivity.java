@@ -42,13 +42,4 @@ public class VideoDetailActivity extends NavigationDrawerActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onBackPressed()
-    {
-        VideoDetailFragment frag = (VideoDetailFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-        if(frag != null)
-            if(!frag.onBackPressed())
-                super.onBackPressed(); // Close app (presumably)
-    }
 }
