@@ -77,7 +77,7 @@ public class VideoDetailFragment extends Fragment {
                 Window w = getActivity().getWindow();
                 if (fullscreen)
                 {
-                    // TODO remove actionbar
+                    getActivity().getActionBar().hide();
                     WindowManager.LayoutParams attrs = w.getAttributes();
                     attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
                     attrs.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -89,7 +89,7 @@ public class VideoDetailFragment extends Fragment {
                 }
                 else
                 {
-                    // TODO add actionbar
+                    getActivity().getActionBar().show();
                     WindowManager.LayoutParams attrs = w.getAttributes();
                     attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
                     attrs.flags &= ~WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
