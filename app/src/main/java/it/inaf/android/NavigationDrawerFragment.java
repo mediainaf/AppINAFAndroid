@@ -7,7 +7,6 @@ package it.inaf.android;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -98,6 +97,8 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section2),
                         getString(R.string.title_section3),
                         getString(R.string.title_section4),
+                        "void",
+                        getString(R.string.title_section6)
                 }));
         return mDrawerListView;
     }

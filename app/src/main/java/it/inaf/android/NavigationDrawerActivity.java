@@ -90,6 +90,18 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 overridePendingTransition(0, 0);
                 break;
             }
+            case 4: {
+            }
+            case 5: {
+                mTitle = getString(R.string.title_section6);
+                Intent placesIntent = new Intent(this, LocationsActivity.class);
+                placesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                placesIntent.putExtra("nav_position", position);
+                startActivity(placesIntent);
+                finish();
+                overridePendingTransition(0, 0);
+                break;
+            }
         }
     }
 

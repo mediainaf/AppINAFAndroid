@@ -3,6 +3,8 @@
     package="it.inaf.android" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name="INAF"
@@ -10,6 +12,14 @@
         android:icon="@drawable/ic_launcher"
         android:label=""
         android:theme="@style/AppTheme" >
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDKDoGBwzhZOYZiRiV8TzNq2Uo_prepybQ"/>
 
         <activity
             android:name=".SplashActivity"
@@ -54,6 +64,17 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".VideoGalleryActivity" />
+        </activity>
+
+<!--        <activity
+            android:name=".AppsActivity"
+            android:label="@string/title_section5">
+        </activity> -->
+
+        <activity
+            android:name=".LocationsActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:label="@string/title_section6">
         </activity>
     </application>
 
