@@ -30,7 +30,6 @@ public class JSONRequestFragment extends Fragment {
 
     private Callbacks mCallbacks;
     private boolean mRunning;
-    private int mId;
 
     @Override
     public void onAttach(Activity activity) {
@@ -96,6 +95,11 @@ public class JSONRequestFragment extends Fragment {
     }
 
     private class ResponseListenerArray implements Response.Listener<JSONArray> {
+        private int mId;
+
+        ResponseListenerArray(int id) {
+            mId = id;
+        }
 
         @Override
         public void onResponse(JSONArray response) {
@@ -107,6 +111,11 @@ public class JSONRequestFragment extends Fragment {
 
     private class ResponseListener implements Response.Listener<JSONObject> {
 
+        private int mId;
+
+        ResponseListener(int id) {
+            mId = id;
+        }
         @Override
         public void onResponse(JSONObject response) {
             if(mCallbacks != null)
@@ -129,14 +138,13 @@ public class JSONRequestFragment extends Fragment {
      * Start the volley request.
      */
     public void start(int id, String url, boolean isArray) {
-        mId = id;
 
         if(isArray) {
-            JsonArrayRequest request = new JsonArrayRequest(url, new ResponseListenerArray(), new ErrorListener());
+            JsonArrayRequest request = new JsonArrayRequest(url, new ResponseListenerArray(id), new ErrorListener());
             INAF.requestQueue.add(request);
         }
         else {
-            JsonObjectRequest request = new JsonObjectRequest(url, null, new ResponseListener(), new ErrorListener());
+            JsonObjectRequest request = new JsonObjectRequest(url, null, new ResponseListener(id), new ErrorListener());
             INAF.requestQueue.add(request);
         }
 
