@@ -23,6 +23,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
 
     public static final int JSON_ABOUT = 0;
     public static final int JSON_HOME_SPLASH_IMAGE = 1;
+    public static final int JSON_LOCATIONS = 2;
     public int responseCounter = 0;
 
     @Override
@@ -52,14 +53,24 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
             fm.beginTransaction().add(requestImage, "json_request2").commit();
         }
         requestImage.start(JSON_HOME_SPLASH_IMAGE, imageJsonUrl, false);
+
+        JSONRequestFragment requestLocations = (JSONRequestFragment) fm.findFragmentByTag("json_request3");
+        if (requestLocations == null) {
+            requestLocations = new JSONRequestFragment();
+            fm.beginTransaction().add(requestLocations, "json_request3").commit();
+        }
+        requestDetails.start(JSON_LOCATIONS, INAF.locationsUrl, true);
     }
 
     @Override
     public void onResponseArray(int id, JSONArray response) {
         if (id == JSON_ABOUT) {
             INAF.jsonAbout = response;
-            checkStart();
         }
+        else if(id == JSON_LOCATIONS) {
+            INAF.jsonLocations = response;
+        }
+        checkStart();
     }
 
     @Override
@@ -105,7 +116,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         responseCounter++;
         Log.d("SplashActivity::onResponseArray()", "counter increased to " + responseCounter);
 
-        if(responseCounter == 2) {
+        if(responseCounter == 3) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
             finish();
