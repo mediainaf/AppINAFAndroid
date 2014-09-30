@@ -32,10 +32,10 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         setContentView(R.layout.activity_splash);
 
         ImageView image = (ImageView) findViewById(R.id.splash_image);
-        if (INAF.aspectRatio > 1.5)
-            image.setImageResource(R.drawable.launch_port_16_9);
+        if (!INAF.landscape)
+            image.setImageResource(R.drawable.galileo);
         else
-            image.setImageResource(R.drawable.launch_port_4_3);
+            image.setImageResource(R.drawable.galileo_l);
 
         FragmentManager fm = getSupportFragmentManager();
         JSONRequestFragment requestDetails = (JSONRequestFragment) fm.findFragmentByTag("json_request1");
