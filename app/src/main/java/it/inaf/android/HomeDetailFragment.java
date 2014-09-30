@@ -4,13 +4,13 @@
 
 package it.inaf.android;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -34,18 +34,16 @@ public class HomeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.home_detail_fragment, container, false);
+        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.home_detail_fragment, container, false);
 
-        TextView textView = (TextView) layout.findViewById(R.id.homeText);
+        TextView textView = (TextView) layout.findViewById(R.id.home_text);
+        ImageView imgView = (ImageView) layout.findViewById(R.id.home_background);
+
         textView.setText(mDescription);
-
         double ratio = 0.7;
         textView.setWidth((int) (INAF.width * ratio));
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-            layout.setBackground(INAF.homeBackground);
-        else
-            layout.setBackgroundDrawable(INAF.homeBackground);
+        imgView.setImageDrawable(INAF.homeBackground);
 
         return layout;
     }

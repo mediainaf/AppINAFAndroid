@@ -68,11 +68,13 @@ public class INAF extends Application {
             width = display.getWidth();  // deprecated
             height = display.getHeight();  // deprecated
         }
+        landscape = false;
         int r = display.getRotation();
         if(r == Surface.ROTATION_90 || r == Surface.ROTATION_270) {
             int tmp = width;
             width = height;
             height = tmp;
+            landscape = true;
         }
 
         if(width > height)

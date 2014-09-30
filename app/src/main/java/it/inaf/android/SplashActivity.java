@@ -71,6 +71,12 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
             INAF.jsonLocations = response;
         }
         checkStart();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
