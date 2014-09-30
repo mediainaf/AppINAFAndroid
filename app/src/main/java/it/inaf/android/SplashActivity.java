@@ -24,6 +24,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
     public static final int JSON_ABOUT = 0;
     public static final int JSON_HOME_SPLASH_IMAGE = 1;
     public static final int JSON_LOCATIONS = 2;
+    public static final int JSON_APPS = 3;
     public int responseCounter = 0;
 
     @Override
@@ -60,6 +61,13 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
             fm.beginTransaction().add(requestLocations, "json_request3").commit();
         }
         requestDetails.start(JSON_LOCATIONS, INAF.locationsUrl, true);
+
+        JSONRequestFragment requestApps = (JSONRequestFragment) fm.findFragmentByTag("json_request4");
+        if (requestApps == null) {
+            requestApps = new JSONRequestFragment();
+            fm.beginTransaction().add(requestApps, "json_request4").commit();
+        }
+        requestApps.start(JSON_APPS, INAF.appsUrl, true);
     }
 
     @Override
@@ -70,13 +78,10 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         else if(id == JSON_LOCATIONS) {
             INAF.jsonLocations = response;
         }
-        checkStart();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        else if(id == JSON_APPS) {
+            INAF.jsonApps = response;
         }
+        checkStart();
     }
 
     @Override
@@ -122,7 +127,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         responseCounter++;
         Log.d("SplashActivity::onResponseArray()", "counter increased to " + responseCounter);
 
-        if(responseCounter == 3) {
+        if(responseCounter == 4) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
             finish();

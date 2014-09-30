@@ -43,6 +43,8 @@ public class INAF extends Application {
     public static BitmapDrawable homeBackground;
     public static String locationsUrl = "http://app.media.inaf.it/GetLocations.php";
     public static JSONArray jsonLocations;
+    public static String appsUrl = "http://app.media.inaf.it/GetApps.php";
+    public static JSONArray jsonApps;
 
     @Override
     public void onCreate() {
