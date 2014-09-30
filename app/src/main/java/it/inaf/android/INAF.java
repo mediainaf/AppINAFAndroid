@@ -6,6 +6,7 @@ package it.inaf.android;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -33,6 +34,7 @@ public class INAF extends Application {
     public static int width;
     public static int height;
     public static float aspectRatio;
+    public static boolean landscape;
 
     public static String aboutUrl = "http://app.media.inaf.it/GetAbout.php";
     public static JSONArray jsonAbout;
@@ -79,6 +81,16 @@ public class INAF extends Application {
             aspectRatio = height / (float)width;
 
         Log.i("Info", "Width: " + width + " Height: " + height + "Aspect Ratio: " + aspectRatio);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            landscape = true;
+        }else{
+            landscape = false;
+        }
     }
 
     public static BitmapLruCache getBitmapCache() {
