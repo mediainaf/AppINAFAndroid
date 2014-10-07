@@ -120,6 +120,16 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 overridePendingTransition(0, 0);
                 break;
             }
+            case 7: {
+                mTitle = getString(R.string.title_section8);
+                Intent satellitesIntent = new Intent(this, SatelliteListActivity.class);
+                satellitesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                satellitesIntent.putExtra("nav_position", position);
+                startActivity(satellitesIntent);
+                finish();
+                overridePendingTransition(0, 0);
+                break;
+            }
         }
     }
 

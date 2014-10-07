@@ -26,6 +26,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
     public static final int JSON_LOCATIONS = 2;
     public static final int JSON_APPS = 3;
     public static final int JSON_TELESCOPES = 4;
+    public static final int JSON_SATELLITES = 5;
     public int responseCounter = 0;
 
     @Override
@@ -76,6 +77,13 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
             fm.beginTransaction().add(requestTelescopes, "json_request5").commit();
         }
         requestApps.start(JSON_TELESCOPES, INAF.telescopesUrl, true);
+
+        JSONRequestFragment requestSatellites = (JSONRequestFragment) fm.findFragmentByTag("json_request6");
+        if (requestSatellites == null) {
+            requestSatellites = new JSONRequestFragment();
+            fm.beginTransaction().add(requestSatellites, "json_request6").commit();
+        }
+        requestApps.start(JSON_SATELLITES, INAF.satellitesUrl, true);
     }
 
     @Override
@@ -91,6 +99,9 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         }
         else if(id == JSON_TELESCOPES) {
             INAF.jsonTelescopes = response;
+        }
+        else if(id == JSON_SATELLITES) {
+            INAF.jsonSatellites = response;
         }
         checkStart();
     }
@@ -138,7 +149,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         responseCounter++;
         Log.d("SplashActivity::onResponseArray()", "counter increased to " + responseCounter);
 
-        if(responseCounter == 5) {
+        if(responseCounter == 6) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
             finish();

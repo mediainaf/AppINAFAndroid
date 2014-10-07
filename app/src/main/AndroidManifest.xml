@@ -83,6 +83,12 @@
             android:label="@string/title_section7">
         </activity>
 
+        <activity
+            android:name=".SatelliteListActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:label="@string/title_section8">
+        </activity>
+
     </application>
 
 </manifest>
