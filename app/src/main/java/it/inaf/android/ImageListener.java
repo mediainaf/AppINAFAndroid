@@ -11,8 +11,8 @@ import com.android.volley.toolbox.ImageLoader;
 
 public class ImageListener implements ImageLoader.ImageListener
 {
-    private ImageView mImage;
-    private String mUrl;
+    protected ImageView mImage;
+    protected String mUrl;
 
     ImageListener(ImageView image) {
         mImage = image;

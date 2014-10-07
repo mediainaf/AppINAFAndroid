@@ -12,4 +12,6 @@
 
     <dimen name="thumb_size">120dp</dimen>
     <dimen name="thumb_spacing">4dp</dimen>
+
+    <dimen name="telescope_padding">20dp</dimen>
 </resources>

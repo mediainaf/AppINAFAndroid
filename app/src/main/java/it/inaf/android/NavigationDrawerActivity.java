@@ -110,6 +110,16 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 overridePendingTransition(0, 0);
                 break;
             }
+            case 6: {
+                mTitle = getString(R.string.title_section7);
+                Intent telescopesIntent = new Intent(this, TelescopeListActivity.class);
+                telescopesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                telescopesIntent.putExtra("nav_position", position);
+                startActivity(telescopesIntent);
+                finish();
+                overridePendingTransition(0, 0);
+                break;
+            }
         }
     }
 

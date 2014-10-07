@@ -45,6 +45,9 @@ public class INAF extends Application {
     public static JSONArray jsonLocations;
     public static String appsUrl = "http://app.media.inaf.it/GetApps.php";
     public static JSONArray jsonApps;
+    public static String telescopesUrl = "http://app.media.inaf.it/GetTelescopes.php";
+    public static String telescopeImagePrefixUrl = "http://www.media.inaf.it/wp-content/themes/mediainaf/images/tags/";
+    public static JSONArray jsonTelescopes;
 
     @Override
     public void onCreate() {

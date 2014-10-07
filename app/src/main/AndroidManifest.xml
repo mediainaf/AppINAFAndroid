@@ -76,6 +76,13 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:label="@string/title_section6">
         </activity>
+
+        <activity
+            android:name=".TelescopeListActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:label="@string/title_section7">
+        </activity>
+
     </application>
 
 </manifest>
