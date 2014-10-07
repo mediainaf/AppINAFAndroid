@@ -91,6 +91,14 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 break;
             }
             case 4: {
+                mTitle = getString(R.string.title_section5);
+                Intent appsIntent = new Intent(this, AppsActivity.class);
+                appsIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                appsIntent.putExtra("nav_position", position);
+                startActivity(appsIntent);
+                finish();
+                overridePendingTransition(0, 0);
+                break;
             }
             case 5: {
                 mTitle = getString(R.string.title_section6);

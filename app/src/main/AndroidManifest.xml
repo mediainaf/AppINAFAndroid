@@ -66,10 +66,10 @@
                 android:value=".VideoGalleryActivity" />
         </activity>
 
-<!--        <activity
+        <activity
             android:name=".AppsActivity"
             android:label="@string/title_section5">
-        </activity> -->
+        </activity>
 
         <activity
             android:name=".LocationsActivity"

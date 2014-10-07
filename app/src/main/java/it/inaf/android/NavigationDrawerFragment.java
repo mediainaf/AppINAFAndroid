@@ -97,7 +97,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section2),
                         getString(R.string.title_section3),
                         getString(R.string.title_section4),
-                        "Apps",
+                        getString(R.string.title_section5),
                         getString(R.string.title_section6)
                 }));
         return mDrawerListView;
