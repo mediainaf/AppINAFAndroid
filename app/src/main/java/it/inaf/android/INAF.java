@@ -5,7 +5,6 @@
 package it.inaf.android;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,7 +27,6 @@ public class INAF extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
-    private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
     public static int width;
@@ -56,9 +54,7 @@ public class INAF extends Application {
     public void onCreate() {
         super.onCreate();
 
-        mContext = this;
-
-        requestQueue = Volley.newRequestQueue(mContext, null);
+        requestQueue = Volley.newRequestQueue(this, null);
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
         VolleyLog.setTag("MyAppTag");
         // http://stackoverflow.com/a/17035814

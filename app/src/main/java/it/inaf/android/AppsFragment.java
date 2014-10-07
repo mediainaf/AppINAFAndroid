@@ -66,7 +66,7 @@ public class AppsFragment extends ListFragment {
             if(convertView == null)
             {
                 LayoutInflater li = LayoutInflater.from(mContext);
-                convertView = li.inflate(R.layout.app_item, null);
+                convertView = li.inflate(R.layout.app_item, parent, false);
 
                 holder = new ViewHolder();
                 holder.image = (ImageView)convertView.findViewById(R.id.apps_list_image);

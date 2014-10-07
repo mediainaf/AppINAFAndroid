@@ -8,7 +8,8 @@
         android:id="@+id/home_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/image_description" />
     <TextView
         android:id="@+id/home_text"
         android:layout_width="wrap_content"
@@ -16,5 +17,6 @@
         android:textSize="@dimen/home_text_size"
         android:textColor="#FFFFFF"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:padding="10dp"/>
 </RelativeLayout>

@@ -24,8 +24,6 @@ import java.util.HashSet;
 
 public class SatelliteListFragment extends ListFragment {
 
-    private ArrayList<SatelliteItem> mItemList;
-    private SatelliteListAdapter mAdapter;
     private HashSet<String> mNoImageSet = new HashSet<String>();
 
     static class ViewHolder
@@ -95,7 +93,7 @@ public class SatelliteListFragment extends ListFragment {
             if(convertView == null)
             {
                 LayoutInflater li = LayoutInflater.from(mContext);
-                convertView = li.inflate(R.layout.satellite_item, null);
+                convertView = li.inflate(R.layout.satellite_item, parent, false);
 
                 holder = new ViewHolder();
                 holder.image = (ImageView)convertView.findViewById(R.id.satellite_list_image);
@@ -135,10 +133,8 @@ public class SatelliteListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemList = new ArrayList<SatelliteItem>();
-
+        ArrayList<SatelliteItem> itemList = new ArrayList<SatelliteItem>();
         int length = INAF.jsonSatellites.length();
-
         for (int i = 0; i < length; i++) {
             try {
                 JSONObject obj = INAF.jsonSatellites.getJSONObject(i);
@@ -160,15 +156,15 @@ public class SatelliteListFragment extends ListFragment {
                 satItem.srow = obj.getInt("srow");
                 satItem.scol = obj.getInt("scol");
                 satItem.showonweb = obj.getString("showonweb").equals("1");
-                satItem.showonapp = show;
+                satItem.showonapp = true;
 
-                mItemList.add(satItem);
+                itemList.add(satItem);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        mAdapter = new SatelliteListAdapter(getActivity(), R.layout.satellite_item, mItemList);
-        setListAdapter(mAdapter);
+        SatelliteListAdapter adapter = new SatelliteListAdapter(getActivity(), R.layout.satellite_item, itemList);
+        setListAdapter(adapter);
     }
 }

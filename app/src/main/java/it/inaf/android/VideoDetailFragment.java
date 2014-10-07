@@ -27,10 +27,6 @@ public class VideoDetailFragment extends Fragment {
     private String mVideoUrl;
     private String mvisCounter;
     private String mDescription;
-    private VideoEnabledWebView mWebView;
-    private VideoEnabledWebChromeClient mWebChromeClient;
-
-    public static final String ARG_ITEM_ID = "item_id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +57,8 @@ public class VideoDetailFragment extends Fragment {
         View progress = root.findViewById(R.id.video_detail_loading);
         video.getSettings().setJavaScriptEnabled(true);
 
-        mWebChromeClient = new VideoEnabledWebChromeClient(scroll, videoLayout, progress, (VideoEnabledWebView) video)
+        VideoEnabledWebChromeClient webChromeClient;
+        webChromeClient = new VideoEnabledWebChromeClient(scroll, videoLayout, progress, (VideoEnabledWebView) video)
         {
             @Override
             public void onProgressChanged(WebView view, int progress)
@@ -69,7 +66,7 @@ public class VideoDetailFragment extends Fragment {
             }
         };
 
-        mWebChromeClient.setOnToggledFullscreen(new VideoEnabledWebChromeClient.ToggledFullscreenCallback()
+        webChromeClient.setOnToggledFullscreen(new VideoEnabledWebChromeClient.ToggledFullscreenCallback()
         {
             @Override
             public void toggledFullscreen(boolean fullscreen)
@@ -102,7 +99,7 @@ public class VideoDetailFragment extends Fragment {
             }
         });
 
-        video.setWebChromeClient(mWebChromeClient);
+        video.setWebChromeClient(webChromeClient);
         video.setPadding(0, 0, 0, 0);
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;

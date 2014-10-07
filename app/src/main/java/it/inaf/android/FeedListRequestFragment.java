@@ -109,9 +109,6 @@ public class FeedListRequestFragment extends Fragment {
         super.onStop();
     }
 
-    protected static final String TYPE_UTF8_CHARSET = "charset=UTF-8";
-
-
     private class StringUTF8Request extends StringRequest {
 
         public StringUTF8Request(int method, String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
@@ -150,7 +147,7 @@ public class FeedListRequestFragment extends Fragment {
 
                 List<Element> items = doc.getContent(Filters.element()).get(0).getChild("channel").getChildren("item");
 
-                for (int i=0; i < items.size(); i++) {
+                for(int i=0; i < items.size(); i++) {
                     RSSItem rssItem = new RSSItem();
                     Element item = items.get(i);
 
@@ -211,9 +208,5 @@ public class FeedListRequestFragment extends Fragment {
             Log.e("errors", "TODO: cancel volley request");
             mRunning = false;
         }
-    }
-
-    public boolean isRunning() {
-        return mRunning;
     }
 }

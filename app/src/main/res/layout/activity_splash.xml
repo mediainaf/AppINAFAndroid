@@ -7,11 +7,14 @@
         android:id="@+id/splash_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/image_description" />
     <ImageView
         android:id="@+id/splash_logo"
         android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/logo_splash" />
+        android:src="@drawable/logo_splash"
+        android:contentDescription="@string/image_description" />
 </RelativeLayout>

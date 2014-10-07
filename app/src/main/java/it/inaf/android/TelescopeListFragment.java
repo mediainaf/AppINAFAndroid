@@ -24,8 +24,6 @@ import java.util.HashSet;
 
 public class TelescopeListFragment extends ListFragment {
 
-    private ArrayList<TelescopeItem> mItemList;
-    private TelescopeListAdapter mAdapter;
     private HashSet<String> mNoImageSet = new HashSet<String>();
 
     static class ViewHolder
@@ -135,7 +133,7 @@ public class TelescopeListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemList = new ArrayList<TelescopeItem>();
+        ArrayList<TelescopeItem> itemList = new ArrayList<TelescopeItem>();
 
         int length = INAF.jsonTelescopes.length();
 
@@ -160,15 +158,15 @@ public class TelescopeListFragment extends ListFragment {
                 telItem.phase = obj.getInt("phase");
                 telItem.scope = obj.getInt("scope");
                 telItem.showonweb = obj.getString("showonweb").equals("1");
-                telItem.showonapp = show;
+                telItem.showonapp = true;
 
-                mItemList.add(telItem);
+                itemList.add(telItem);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        mAdapter = new TelescopeListAdapter(getActivity(), R.layout.telescope_item, mItemList);
-        setListAdapter(mAdapter);
+        TelescopeListAdapter adapter = new TelescopeListAdapter(getActivity(), R.layout.telescope_item, itemList);
+        setListAdapter(adapter);
     }
 }

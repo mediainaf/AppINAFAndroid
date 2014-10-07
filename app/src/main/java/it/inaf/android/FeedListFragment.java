@@ -198,7 +198,7 @@ public class FeedListFragment extends ListFragment
             if(convertView == null)
             {
                 LayoutInflater li = LayoutInflater.from(mContext);
-                convertView = li.inflate(R.layout.feed_item, null);
+                convertView = li.inflate(R.layout.feed_item, parent, false);
 
                 holder = new ViewHolder();
                 holder.image = (ImageView)convertView.findViewById(R.id.imageView1);
@@ -234,7 +234,7 @@ public class FeedListFragment extends ListFragment
             int heightDate = holder.subtitle.getLineHeight();
             int heightContainer = convertView.findViewById(R.id.vlayout1).getLayoutParams().height; // this has to be fixed
             int heightDescription = heightContainer - heightTitle - heightDate;
-            int descNLines = (int) heightDescription / holder.description.getLineHeight();
+            int descNLines = (int) (heightDescription * 1.0 / holder.description.getLineHeight());
             holder.description.setLines(descNLines);
 
             holder.image.setTag(data.imageUrl);

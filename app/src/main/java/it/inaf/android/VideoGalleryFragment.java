@@ -6,6 +6,7 @@ package it.inaf.android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -76,9 +77,7 @@ public class VideoGalleryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.video_gallery_fragment, container, false);
-
-        return layout;
+        return inflater.inflate(R.layout.video_gallery_fragment, container, false);
     }
 
     @Override
@@ -133,8 +132,11 @@ public class VideoGalleryFragment extends Fragment {
                 {
                     // second pass
                     mGridView.setVisibility(View.VISIBLE);
-                    // TODO fix the api level
-                    mGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        mGridView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    } else {
+                        mGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
                     ProgressBar pb = (ProgressBar) getActivity().findViewById(R.id.preloader);
                     pb.setVisibility(ProgressBar.INVISIBLE);
                 }
@@ -151,7 +153,6 @@ public class VideoGalleryFragment extends Fragment {
     }
 
     private class VideoListAdapter extends ArrayAdapter<VideoItem> {
-        private Context mContext;
         private ArrayList<VideoItem> objects = null;
         private LayoutInflater mInflater;
         private RelativeLayout.LayoutParams mImageViewLayoutParams;
@@ -161,7 +162,6 @@ public class VideoGalleryFragment extends Fragment {
         public VideoListAdapter(Context context, int id, ArrayList<VideoItem> objects)
         {
             super(context, id, objects);
-            mContext = context;
             this.objects = objects;
 
             mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -208,7 +208,7 @@ public class VideoGalleryFragment extends Fragment {
 
             ViewHolder holder;
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.video_item, null);
+                convertView = mInflater.inflate(R.layout.video_item, parent, false);
                 holder = new ViewHolder();
                 holder.thumbnail = (ImageView) convertView.findViewById(R.id.video_item_image);
                 holder.title = (TextView) convertView.findViewById(R.id.video_item_title);

@@ -21,8 +21,6 @@ public class FeedDetailFragment extends Fragment
     private String mDescription;
     private String mContent;
 
-    public static final String ARG_ITEM_ID = "item_id";
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -44,7 +42,7 @@ public class FeedDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
-        ScrollView parent = (ScrollView) inflater.inflate(R.layout.fragment_feed_detail, null);
+        ScrollView parent = (ScrollView) inflater.inflate(R.layout.fragment_feed_detail, container, false);
         TextView titleView = (TextView)parent.findViewById(R.id.txtTitle);
         titleView.setText(mTitle);
         TextView subtitleView = (TextView)parent.findViewById(R.id.txtSubtitle);

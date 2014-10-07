@@ -161,11 +161,4 @@ public class JSONRequestFragment extends Fragment {
             mRunning = false;
         }
     }
-
-    /**
-     * Returns the current state of the request.
-     */
-    public boolean isRunning() {
-        return mRunning;
-    }
 }
