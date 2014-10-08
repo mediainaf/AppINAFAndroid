@@ -17,11 +17,15 @@ public class DateFormatter {
             tmpDate = format.parse(date);
         } catch(ParseException e) {
             format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
             try {
                 tmpDate = format.parse(date);
             } catch (ParseException e1) {
-                e1.printStackTrace();
+                format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                try {
+                    tmpDate = format.parse(date);
+                } catch (ParseException e2) {
+                    e2.printStackTrace();
+                }
             }
         }
 

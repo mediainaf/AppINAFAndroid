@@ -89,6 +89,12 @@
             android:label="@string/title_section8">
         </activity>
 
+        <activity
+            android:name=".JobListActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:label="@string/title_section9">
+        </activity>
+
     </application>
 
 </manifest>
