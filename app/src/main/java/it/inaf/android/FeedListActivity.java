@@ -13,14 +13,27 @@ import android.widget.ProgressBar;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filters;
+import org.jdom2.input.SAXBuilder;
+import org.xml.sax.InputSource;
+
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FeedListActivity extends NavigationDrawerActivity
-        implements FeedListRequestFragment.Callbacks, FeedListFragment.Callbacks {
+        implements StringRequestFragment.Callbacks, FeedListFragment.Callbacks {
 
 //    private boolean mTwoPane;
 
-    FeedListRequestFragment mFeedListRequest;
+    StringRequestFragment mFeedListRequest;
 
     boolean mLoading = false;
 
@@ -29,10 +42,10 @@ public class FeedListActivity extends NavigationDrawerActivity
         super.onCreate(savedInstanceState);
 
         FragmentManager fm = getSupportFragmentManager();
-        mFeedListRequest = (FeedListRequestFragment) fm.findFragmentByTag("feed_list_request");
+        mFeedListRequest = (StringRequestFragment) fm.findFragmentByTag("feed_list_request");
 
         if (mFeedListRequest == null) {
-            mFeedListRequest = new FeedListRequestFragment();
+            mFeedListRequest = new StringRequestFragment();
             fm.beginTransaction().add(mFeedListRequest, "feed_list_request").commit();
         }
 
@@ -52,9 +65,53 @@ public class FeedListActivity extends NavigationDrawerActivity
     }
 
     @Override
-    public void onResponse(ArrayList<RSSItem> itemList) {
+    public void onResponse(String xmlString) {
+        ArrayList<RSSItem> itemList = new ArrayList<RSSItem>();
+
+        // parse xml
+        try {
+            SAXBuilder builder = new SAXBuilder();
+            Document doc = builder.build(new InputSource(new StringReader(xmlString)));
+
+            List<Element> items = doc.getContent(Filters.element()).get(0).getChild("channel").getChildren("item");
+
+            for (int i=0; i < items.size(); i++) {
+                RSSItem rssItem = new RSSItem();
+                Element item = items.get(i);
+
+                rssItem.title = item.getChild("title").getText();
+                rssItem.date = DateFormatter.format(item.getChild("pubDate").getText());
+                rssItem.link = item.getChild("link").getText();
+                Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
+                rssItem.author = authorElement.getText();
+                String descriptionCDATA = item.getChild("description").getText();
+                String descClean = descriptionCDATA.replaceAll("<(.*?)\\>"," "); //Removes all items in brackets
+                descClean = descClean.replaceAll("<(.*?)\\\n"," "); //Must be undeneath
+                descClean = descClean.replaceFirst("(.*?)\\>", " "); //Removes any connected item to the last bracket
+                descClean = descClean.replaceAll("&nbsp;"," ");
+                descClean = descClean.replaceAll("&amp;"," ");
+                descClean = descClean.replaceAll("&amp;"," ");
+                rssItem.description = descClean.trim();
+                // find the image url inside the description
+                Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
+                Matcher m = p.matcher(descriptionCDATA);
+                m.find();
+                rssItem.imageUrl = m.group(1);
+                Element contentElement = item.getChild("encoded", Namespace.getNamespace("http://purl.org/rss/1.0/modules/content/"));
+                String contentCDATA = contentElement.getText();
+                rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
+
+                itemList.add(rssItem);
+            }
+        } catch (JDOMException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FeedListFragment target = (FeedListFragment) fragmentManager.findFragmentByTag("feedlist" + mTitle);
+
         if(target != null) {
             target.setArrayList(itemList);
         }

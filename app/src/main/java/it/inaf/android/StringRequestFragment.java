@@ -17,31 +17,18 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 
 import org.apache.http.protocol.HTTP;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.Namespace;
-import org.jdom2.filter.Filters;
-import org.jdom2.input.SAXBuilder;
-import org.xml.sax.InputSource;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class FeedListRequestFragment extends Fragment {
+public class StringRequestFragment extends Fragment {
 
     static interface Callbacks {
-        void onResponse(ArrayList<RSSItem> itemList);
+        void onResponse(String xmlString);
         void onError(VolleyError error);
     }
 
     private static final boolean DEBUG = true;
-    private static final String TAG = FeedListRequestFragment.class.getSimpleName();
+    private static final String TAG = StringRequestFragment.class.getSimpleName();
 
     private Callbacks mCallbacks;
     private boolean mRunning;
@@ -51,7 +38,7 @@ public class FeedListRequestFragment extends Fragment {
         if (DEBUG) Log.i(TAG, "onAttach(Activity)");
         super.onAttach(activity);
 
-        if (!(activity instanceof FeedListRequestFragment.Callbacks)) {
+        if (!(activity instanceof StringRequestFragment.Callbacks)) {
             throw new IllegalStateException("Activity must implement the FeedListRequestFragment interface.");
         }
 
@@ -134,55 +121,10 @@ public class FeedListRequestFragment extends Fragment {
 
     private class ResponseListener implements Response.Listener<String> {
 
-        SAXBuilder mBuilder = new SAXBuilder();
-
-
-
         @Override
         public void onResponse(String response) {
-            ArrayList<RSSItem> itemList = new ArrayList<RSSItem>();
-
-            try {
-                Document doc = mBuilder.build(new InputSource(new StringReader(response)));
-
-                List<Element> items = doc.getContent(Filters.element()).get(0).getChild("channel").getChildren("item");
-
-                for(int i=0; i < items.size(); i++) {
-                    RSSItem rssItem = new RSSItem();
-                    Element item = items.get(i);
-
-                    rssItem.title = item.getChild("title").getText();
-                    rssItem.date = DateFormatter.format(item.getChild("pubDate").getText());
-                    rssItem.link = item.getChild("link").getText();
-                    Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
-                    rssItem.author = authorElement.getText();
-                    String descriptionCDATA = item.getChild("description").getText();
-                    String descClean = descriptionCDATA.replaceAll("<(.*?)\\>"," "); //Removes all items in brackets
-                    descClean = descClean.replaceAll("<(.*?)\\\n"," "); //Must be undeneath
-                    descClean = descClean.replaceFirst("(.*?)\\>", " "); //Removes any connected item to the last bracket
-                    descClean = descClean.replaceAll("&nbsp;"," ");
-                    descClean = descClean.replaceAll("&amp;"," ");
-                    descClean = descClean.replaceAll("&amp;"," ");
-                    rssItem.description = descClean.trim();
-                    // find the image url inside the description
-                    Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
-                    Matcher m = p.matcher(descriptionCDATA);
-                    m.find();
-                    rssItem.imageUrl = m.group(1);
-                    Element contentElement = item.getChild("encoded", Namespace.getNamespace("http://purl.org/rss/1.0/modules/content/"));
-                    String contentCDATA = contentElement.getText();
-                    rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
-
-                    itemList.add(rssItem);
-                }
-            } catch (JDOMException e1) {
-                e1.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
             if(mCallbacks != null)
-                mCallbacks.onResponse(itemList);
+                mCallbacks.onResponse(response);
             mRunning = false;
         }
     }
