@@ -9,7 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -42,23 +45,70 @@ public class FeedDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
-        ScrollView parent = (ScrollView) inflater.inflate(R.layout.fragment_feed_detail, container, false);
-        TextView titleView = (TextView)parent.findViewById(R.id.txtTitle);
+        RelativeLayout root = (RelativeLayout) inflater.inflate(R.layout.fragment_feed_detail, container, false);
+        ScrollView parent = (ScrollView) root.findViewById(R.id.feed_detail_container);
+        TextView titleView = (TextView) parent.findViewById(R.id.txtTitle);
         titleView.setText(mTitle);
         TextView subtitleView = (TextView)parent.findViewById(R.id.txtSubtitle);
         subtitleView.setText("di "+mAuthor+" / "+mDate);
         TextView summaryView = (TextView)parent.findViewById(R.id.txtSummary);
         summaryView.setText(mDescription);
-        WebView contentView = (WebView)parent.findViewById(R.id.txtContent);
+        VideoEnabledWebView contentView = (VideoEnabledWebView)parent.findViewById(R.id.txtContent);
+        RelativeLayout videoLayout = (RelativeLayout) root.findViewById(R.id.feed_detail_fs_layout);
+        View progress = root.findViewById(R.id.feed_detail_loading);
         // Remove fixed widths
         String replacedString = "<html><body>";
         replacedString += mContent.replaceAll("width=\"[a-zA-Z0-9 ]*\"", "width=\"100%\"").replaceAll("height=\"[a-zA-Z0-9 ]*\"", "");
         replacedString += "</body></html>";
         contentView.getSettings().setJavaScriptEnabled(true);
         contentView.setBackgroundColor(getResources().getColor(R.color.transparent));
+
+        VideoEnabledWebChromeClient webChromeClient;
+        webChromeClient = new VideoEnabledWebChromeClient(parent, videoLayout, progress, contentView)
+        {
+            @Override
+            public void onProgressChanged(WebView view, int progress)
+            {
+            }
+        };
+
+        webChromeClient.setOnToggledFullscreen(new VideoEnabledWebChromeClient.ToggledFullscreenCallback()
+        {
+            @Override
+            public void toggledFullscreen(boolean fullscreen)
+            {
+                Window w = getActivity().getWindow();
+                if (fullscreen)
+                {
+                    getActivity().getActionBar().hide();
+                    WindowManager.LayoutParams attrs = w.getAttributes();
+                    attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                    attrs.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                    w.setAttributes(attrs);
+                    if (android.os.Build.VERSION.SDK_INT >= 14)
+                    {
+                        w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+                    }
+                }
+                else
+                {
+                    getActivity().getActionBar().show();
+                    WindowManager.LayoutParams attrs = w.getAttributes();
+                    attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                    attrs.flags &= ~WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                    w.setAttributes(attrs);
+                    if (android.os.Build.VERSION.SDK_INT >= 14)
+                    {
+                        w.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                    }
+                }
+            }
+        });
+        contentView.setWebChromeClient(webChromeClient);
+
         contentView.loadDataWithBaseURL("", replacedString, "text/html", "UTF-8", null);
 
-        return parent;
+        return root;
     }
 
     @Override
