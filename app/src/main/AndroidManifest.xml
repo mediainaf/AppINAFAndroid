@@ -72,6 +72,15 @@
         </activity>
 
         <activity
+            android:name=".AppDetailActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:parentActivityName=".AppsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AppsActivity" />
+        </activity>
+
+        <activity
             android:name=".LocationsActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:label="@string/title_section6">
