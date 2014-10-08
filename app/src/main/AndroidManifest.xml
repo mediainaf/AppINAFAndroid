@@ -95,6 +95,15 @@
             android:label="@string/title_section9">
         </activity>
 
+        <activity
+            android:name=".JobDetailActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:parentActivityName=".JobListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".JobListActivity" />
+        </activity>
+
     </application>
 
 </manifest>

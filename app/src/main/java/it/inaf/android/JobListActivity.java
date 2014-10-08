@@ -4,6 +4,7 @@
 
 package it.inaf.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.ProgressBar;
@@ -26,7 +27,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class JobListActivity extends NavigationDrawerActivity implements StringRequestFragment.Callbacks {
+public class JobListActivity extends NavigationDrawerActivity
+        implements StringRequestFragment.Callbacks, JobListFragment.Callbacks {
 
     private String jobsUrl = "http://www.inaf.it/it/lavora-con-noi/concorsi-inaf/rss";
 
@@ -113,5 +115,13 @@ public class JobListActivity extends NavigationDrawerActivity implements StringR
     @Override
     public void onError(VolleyError error) {
 
+    }
+
+    @Override
+    public void onItemSelected(Bundle args) {
+        Intent detailIntent = new Intent(this, JobDetailActivity.class);
+        detailIntent.putExtras(args);
+        startActivity(detailIntent);
+        overridePendingTransition(0, 0);
     }
 }
