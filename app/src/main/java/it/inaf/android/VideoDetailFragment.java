@@ -101,6 +101,7 @@ public class VideoDetailFragment extends Fragment {
 
         video.setWebChromeClient(webChromeClient);
         video.setPadding(0, 0, 0, 0);
+        video.setBackgroundColor(getResources().getColor(R.color.transparent));
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;
         video.setLayoutParams(new LinearLayout.LayoutParams(width, (int)(width/1.77)));

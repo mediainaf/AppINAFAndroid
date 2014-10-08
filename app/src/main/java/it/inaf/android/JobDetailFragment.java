@@ -47,6 +47,7 @@ public class JobDetailFragment extends Fragment
         WebView webdetails = (WebView) view.findViewById(R.id.job_detail_webdetails);
 
         title.setText(mItem.title);
+        webdetails.setBackgroundColor(getResources().getColor(R.color.transparent));
 
         webdetails.loadDataWithBaseURL("", mWebpage, "text/html", "UTF-8", null);
 

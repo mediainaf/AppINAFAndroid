@@ -55,6 +55,7 @@ public class FeedDetailFragment extends Fragment
         replacedString += mContent.replaceAll("width=\"[a-zA-Z0-9 ]*\"", "width=\"100%\"").replaceAll("height=\"[a-zA-Z0-9 ]*\"", "");
         replacedString += "</body></html>";
         contentView.getSettings().setJavaScriptEnabled(true);
+        contentView.setBackgroundColor(getResources().getColor(R.color.transparent));
         contentView.loadDataWithBaseURL("", replacedString, "text/html", "UTF-8", null);
 
         return parent;
