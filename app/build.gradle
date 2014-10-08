@@ -26,4 +26,5 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.6'
     compile 'com.google.android.gms:play-services:5.+'
     compile 'org.jdom:jdom2:2.0.5'
+    compile 'ch.acra:acra:4.5.0'
 }

@@ -19,8 +19,15 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+@ReportsCrashes(
+        formKey = "",
+        formUri = "http://app.media.inaf.it/android/report.php"
+)
 
 public class INAF extends Application {
 
@@ -55,6 +62,9 @@ public class INAF extends Application {
         super.onCreate();
 
         requestQueue = Volley.newRequestQueue(this, null);
+
+        ACRA.init(this);
+
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
         VolleyLog.setTag("MyAppTag");
         // http://stackoverflow.com/a/17035814
