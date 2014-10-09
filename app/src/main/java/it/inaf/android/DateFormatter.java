@@ -11,16 +11,16 @@ import java.util.Locale;
 public class DateFormatter {
     public static String format(String date)
     {
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.UK);
         java.util.Date tmpDate = null;
         try {
             tmpDate = format.parse(date);
         } catch(ParseException e) {
-            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
             try {
                 tmpDate = format.parse(date);
             } catch (ParseException e1) {
-                format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK);
                 try {
                     tmpDate = format.parse(date);
                 } catch (ParseException e2) {
