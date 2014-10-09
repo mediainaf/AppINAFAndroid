@@ -108,6 +108,15 @@
         </activity>
 
         <activity
+            android:name=".SatelliteDetailActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:parentActivityName=".SatelliteListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SatelliteListActivity" />
+        </activity>
+
+        <activity
             android:name=".JobListActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:label="@string/title_section9">

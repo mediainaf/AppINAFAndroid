@@ -4,6 +4,7 @@
 
 package it.inaf.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -25,6 +27,14 @@ import java.util.HashSet;
 public class SatelliteListFragment extends ListFragment {
 
     private HashSet<String> mNoImageSet = new HashSet<String>();
+    ArrayList<SatelliteItem> mItemList;
+    Callbacks mCallbacks;
+
+    public interface Callbacks
+    {
+        void onItemSelected(Bundle args);
+    }
+
 
     static class ViewHolder
     {
@@ -130,10 +140,22 @@ public class SatelliteListFragment extends ListFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<SatelliteItem> itemList = new ArrayList<SatelliteItem>();
+        mItemList = new ArrayList<SatelliteItem>();
         int length = INAF.jsonSatellites.length();
         for (int i = 0; i < length; i++) {
             try {
@@ -158,13 +180,24 @@ public class SatelliteListFragment extends ListFragment {
                 satItem.showonweb = obj.getString("showonweb").equals("1");
                 satItem.showonapp = true;
 
-                itemList.add(satItem);
+                mItemList.add(satItem);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        SatelliteListAdapter adapter = new SatelliteListAdapter(getActivity(), R.layout.satellite_item, itemList);
+        SatelliteListAdapter adapter = new SatelliteListAdapter(getActivity(), R.layout.satellite_item, mItemList);
         setListAdapter(adapter);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id)
+    {
+        super.onListItemClick(l, v, position, id);
+
+        SatelliteItem item = mItemList.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString("link", INAF.satelliteDetailPrefixUrl+item.tag);
+        mCallbacks.onItemSelected(bundle);
     }
 }

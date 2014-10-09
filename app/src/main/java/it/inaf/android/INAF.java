@@ -56,6 +56,7 @@ public class INAF extends Application {
     public static JSONArray jsonTelescopes;
     public static String satellitesUrl = "http://app.media.inaf.it/GetSatellites.php";
     public static String satelliteImagePrefixUrl = "http://www.media.inaf.it/wp-content/themes/mediainaf/images/tags/";
+    public static String satelliteDetailPrefixUrl = "http://www.media.inaf.it/tag/";
     public static JSONArray jsonSatellites;
 
     @Override
