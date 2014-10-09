@@ -4,9 +4,11 @@
 
 package it.inaf.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-public class TelescopeListActivity extends NavigationDrawerActivity {
+public class TelescopeListActivity extends NavigationDrawerActivity
+        implements TelescopeListFragment.Callbacks {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,5 +21,13 @@ public class TelescopeListActivity extends NavigationDrawerActivity {
                     .add(R.id.container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onItemSelected(Bundle args) {
+        Intent detailIntent = new Intent(this, TelescopeDetailActivity.class);
+        detailIntent.putExtras(args);
+        startActivity(detailIntent);
+        overridePendingTransition(0, 0);
     }
 }

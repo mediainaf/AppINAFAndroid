@@ -4,6 +4,7 @@
 
 package it.inaf.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -25,6 +27,13 @@ import java.util.HashSet;
 public class TelescopeListFragment extends ListFragment {
 
     private HashSet<String> mNoImageSet = new HashSet<String>();
+    ArrayList<TelescopeItem> mItemList;
+    Callbacks mCallbacks;
+
+    public interface Callbacks
+    {
+        void onItemSelected(Bundle args);
+    }
 
     static class ViewHolder
     {
@@ -130,10 +139,22 @@ public class TelescopeListFragment extends ListFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // Activities containing this fragment must implement its callbacks.
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayList<TelescopeItem> itemList = new ArrayList<TelescopeItem>();
+        mItemList = new ArrayList<TelescopeItem>();
 
         int length = INAF.jsonTelescopes.length();
 
@@ -160,13 +181,24 @@ public class TelescopeListFragment extends ListFragment {
                 telItem.showonweb = obj.getString("showonweb").equals("1");
                 telItem.showonapp = true;
 
-                itemList.add(telItem);
+                mItemList.add(telItem);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        TelescopeListAdapter adapter = new TelescopeListAdapter(getActivity(), R.layout.telescope_item, itemList);
+        TelescopeListAdapter adapter = new TelescopeListAdapter(getActivity(), R.layout.telescope_item, mItemList);
         setListAdapter(adapter);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id)
+    {
+        super.onListItemClick(l, v, position, id);
+
+        TelescopeItem item = mItemList.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString("link", INAF.telescopeDetailPrefixUrl+item.tag);
+        mCallbacks.onItemSelected(bundle);
     }
 }
