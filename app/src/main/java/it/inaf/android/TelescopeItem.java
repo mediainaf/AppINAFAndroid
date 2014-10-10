@@ -4,7 +4,9 @@
 
 package it.inaf.android;
 
-public class TelescopeItem {
+import java.io.Serializable;
+
+public class TelescopeItem implements Serializable {
     String id;
     String name;
     String label;

@@ -4,7 +4,9 @@
 
 package it.inaf.android;
 
-public class AppItem {
+import java.io.Serializable;
+
+public class AppItem implements Serializable {
     String id;
     String name;
     String descr;

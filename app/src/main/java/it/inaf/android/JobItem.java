@@ -6,8 +6,7 @@ package it.inaf.android;
 
 import java.io.Serializable;
 
-public class JobItem implements Serializable
-{
+public class JobItem implements Serializable {
     public String title;
     public String link;
     public String description;

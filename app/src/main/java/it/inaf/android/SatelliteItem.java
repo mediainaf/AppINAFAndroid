@@ -4,7 +4,9 @@
 
 package it.inaf.android;
 
-public class SatelliteItem {
+import java.io.Serializable;
+
+public class SatelliteItem implements Serializable {
     String id;
     String name;
     String label;

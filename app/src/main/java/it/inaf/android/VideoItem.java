@@ -6,8 +6,7 @@ package it.inaf.android;
 
 import java.io.Serializable;
 
-public class VideoItem implements Serializable
-{
+public class VideoItem implements Serializable {
     public String title;
     public String videoUrl;
     public String thumbnailUrl;

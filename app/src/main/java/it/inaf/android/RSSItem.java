@@ -6,10 +6,7 @@ package it.inaf.android;
 
 import java.io.Serializable;
 
-public class RSSItem implements Serializable
-{
-    private static final long serialVersionUID = -4816726307049056150L;
-
+public class RSSItem implements Serializable {
     public String title;
     public String date;
     public String author;
