@@ -140,7 +140,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
 
     @Override
     public void onError(VolleyError error) {
-        Log.i("unhandled errors", "volley error: "+error.toString());
+        Log.i("unhandled errors", "volley error: " + error.toString());
         // TODO handle error!
     }
 

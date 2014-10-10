@@ -32,21 +32,36 @@ public class JobListActivity extends NavigationDrawerActivity
 
     private String jobsUrl = "http://www.inaf.it/it/lavora-con-noi/concorsi-inaf/rss";
 
+    Bundle mArgs;
+    ArrayList<JobItem> mItemList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null)
-            return;
-
-        ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
-        pb.setVisibility(ProgressBar.VISIBLE);
-
         FragmentManager fm = getSupportFragmentManager();
-        StringRequestFragment jobsRequest = new StringRequestFragment();
-        fm.beginTransaction().add(jobsRequest, "job_request").commit();
+        StringRequestFragment request = (StringRequestFragment) fm.findFragmentByTag("feed_list_request");
 
-        jobsRequest.start(Request.Method.GET, jobsUrl);
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
+
+        mItemList = (ArrayList<JobItem>) mArgs.getSerializable("item_list");
+
+        // if there is no request ongoing and no previous request results
+        if(request == null && mItemList == null) {
+            StringRequestFragment jobsRequest = new StringRequestFragment();
+            fm.beginTransaction().add(jobsRequest, "job_request").commit();
+
+            ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
+            pb.setVisibility(ProgressBar.VISIBLE);
+
+            jobsRequest.start(Request.Method.GET, jobsUrl);
+        }
+        else {
+            replaceFragment();
+        }
     }
 
     @Override
@@ -94,22 +109,14 @@ public class JobListActivity extends NavigationDrawerActivity
         Collections.sort(itemList, new Comparator<JobItem>() {
             @Override
             public int compare(JobItem job1, JobItem job2) {
-
-                return job2.plainDate.compareTo(job1.plainDate);
+            return job2.plainDate.compareTo(job1.plainDate);
             }
         });
 
-        FragmentManager fm = getSupportFragmentManager();
+        mItemList = itemList;
         ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
         pb.setVisibility(ProgressBar.INVISIBLE);
-
-        Bundle args = new Bundle();
-        args.putString("title", mTitle);
-        args.putSerializable("item_list", itemList);
-        JobListFragment fragment = new JobListFragment();
-        fragment.setArguments(args);
-        fm.beginTransaction()
-                .replace(R.id.container, fragment, "joblist").commit();
+        replaceFragment();
     }
 
     @Override
@@ -123,5 +130,23 @@ public class JobListActivity extends NavigationDrawerActivity
         detailIntent.putExtras(args);
         startActivity(detailIntent);
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
+        outState.putSerializable("item_list", mItemList);
+    }
+
+    void replaceFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Bundle args = new Bundle();
+        args.putString("title", mTitle);
+        args.putSerializable("item_list", mItemList);
+        JobListFragment fragment = new JobListFragment();
+        fragment.setArguments(args);
+        fm.beginTransaction()
+                .replace(R.id.container, fragment, "joblist").commit();
     }
 }

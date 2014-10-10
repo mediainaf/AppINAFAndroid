@@ -155,34 +155,40 @@ public class SatelliteListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemList = new ArrayList<SatelliteItem>();
-        int length = INAF.jsonSatellites.length();
-        for (int i = 0; i < length; i++) {
-            try {
-                JSONObject obj = INAF.jsonSatellites.getJSONObject(i);
+        if(savedInstanceState != null)
+        {
+            mItemList = (ArrayList<SatelliteItem>) savedInstanceState.getSerializable("item_list");
+        }
+        else {
+            mItemList = new ArrayList<SatelliteItem>();
+            int length = INAF.jsonSatellites.length();
+            for (int i = 0; i < length; i++) {
+                try {
+                    JSONObject obj = INAF.jsonSatellites.getJSONObject(i);
 
-                boolean show = obj.getString("showonapp").equals("1");
-                if (!show)
-                    continue;
+                    boolean show = obj.getString("showonapp").equals("1");
+                    if (!show)
+                        continue;
 
-                SatelliteItem satItem = new SatelliteItem();
-                satItem.id = obj.getString("id");
-                satItem.name = obj.getString("name");
-                satItem.label = obj.getString("label");
-                satItem.tag = obj.getString("tag");
-                satItem.imgUrl = INAF.satelliteImagePrefixUrl + obj.getString("imgbase") + ".jpg";
-                satItem.coordx = obj.getInt("coordx");
-                satItem.coordy = obj.getInt("coordy");
-                satItem.phase = obj.getInt("phase");
-                satItem.scope = obj.getInt("scope");
-                satItem.srow = obj.getInt("srow");
-                satItem.scol = obj.getInt("scol");
-                satItem.showonweb = obj.getString("showonweb").equals("1");
-                satItem.showonapp = true;
+                    SatelliteItem satItem = new SatelliteItem();
+                    satItem.id = obj.getString("id");
+                    satItem.name = obj.getString("name");
+                    satItem.label = obj.getString("label");
+                    satItem.tag = obj.getString("tag");
+                    satItem.imgUrl = INAF.satelliteImagePrefixUrl + obj.getString("imgbase") + ".jpg";
+                    satItem.coordx = obj.getInt("coordx");
+                    satItem.coordy = obj.getInt("coordy");
+                    satItem.phase = obj.getInt("phase");
+                    satItem.scope = obj.getInt("scope");
+                    satItem.srow = obj.getInt("srow");
+                    satItem.scol = obj.getInt("scol");
+                    satItem.showonweb = obj.getString("showonweb").equals("1");
+                    satItem.showonapp = true;
 
-                mItemList.add(satItem);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    mItemList.add(satItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -199,5 +205,11 @@ public class SatelliteListFragment extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putString("link", INAF.satelliteDetailPrefixUrl+item.tag);
         mCallbacks.onItemSelected(bundle);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("item_list", mItemList);
     }
 }

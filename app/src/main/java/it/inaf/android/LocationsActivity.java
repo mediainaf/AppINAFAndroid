@@ -7,18 +7,28 @@ package it.inaf.android;
 import android.os.Bundle;
 
 public class LocationsActivity extends NavigationDrawerActivity {
+    Bundle mArgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            LocationsFragment fragment = new LocationsFragment();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-            fragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
-        }
+        LocationsFragment fragment = new LocationsFragment();
+
+        fragment.setArguments(mArgs);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, fragment)
+                .commit();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

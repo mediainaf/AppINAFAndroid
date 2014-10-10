@@ -15,6 +15,15 @@ import com.android.volley.VolleyError;
 
 public class JobDetailActivity extends NavigationDrawerActivity
         implements StringRequestFragment.Callbacks {
+    Bundle mArgs;
+
+    void addFragment() {
+        JobDetailFragment fragment = new JobDetailFragment();
+        fragment.setArguments(mArgs);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, fragment)
+                .commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +33,22 @@ public class JobDetailActivity extends NavigationDrawerActivity
 
         getActionBar().setTitle("");
 
-        FragmentManager fm = getSupportFragmentManager();
-        StringRequestFragment jobsRequest = new StringRequestFragment();
-        fm.beginTransaction().add(jobsRequest, "job_detail_request").commit();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-        JobItem item = (JobItem) getIntent().getExtras().getSerializable("item");
-        jobsRequest.start(Request.Method.GET, item.link);
+        if(mArgs.getString("webpage") != null) {
+            addFragment();
+        }
+        else {
+            FragmentManager fm = getSupportFragmentManager();
+            StringRequestFragment jobsRequest = new StringRequestFragment();
+            fm.beginTransaction().add(jobsRequest, "job_detail_request").commit();
+
+            JobItem item = (JobItem) mArgs.getSerializable("item");
+            jobsRequest.start(Request.Method.GET, item.link);
+        }
     }
 
     @Override
@@ -48,18 +67,18 @@ public class JobDetailActivity extends NavigationDrawerActivity
 
     @Override
     public void onResponse(String string) {
-        JobDetailFragment fragment = new JobDetailFragment();
-
-        Bundle bundle = getIntent().getExtras();
-        bundle.putString("webpage", string);
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
-                .commit();
+        mArgs.putString("webpage", string);
+        addFragment();
     }
 
     @Override
     public void onError(VolleyError error) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

@@ -23,11 +23,16 @@ public class HomeDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            JSONObject obj = INAF.jsonAbout.getJSONObject(0);
-            mDescription = obj.getString("descr");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(savedInstanceState != null) {
+            mDescription = savedInstanceState.getString("descr");
+        }
+        else {
+            try {
+                JSONObject obj = INAF.jsonAbout.getJSONObject(0);
+                mDescription = obj.getString("descr");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -46,5 +51,11 @@ public class HomeDetailFragment extends Fragment {
         imgView.setImageDrawable(INAF.homeBackground);
 
         return layout;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("descr", mDescription);
     }
 }

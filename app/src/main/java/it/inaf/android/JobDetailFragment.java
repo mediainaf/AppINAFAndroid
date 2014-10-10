@@ -19,23 +19,28 @@ import org.jsoup.select.Elements;
 public class JobDetailFragment extends Fragment
 {
     private JobItem mItem;
-    private String mWebpage;
+    private String mDivOnlyHtml;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         Bundle bundle;
         if(savedInstanceState != null)
             bundle = savedInstanceState;
         else
             bundle = getArguments();
 
+        mDivOnlyHtml = bundle.getString("divonly");
         mItem = (JobItem) bundle.getSerializable("item");
-        mWebpage = bundle.getString("webpage");
-        Document doc = Jsoup.parse(mWebpage);
-        Elements contentDiv = doc.select("div#content");
-        mWebpage = "<html><body>" + contentDiv.get(0).getElementsByClass("contextualbody").html() + "</body></html>";
+
+        if(mDivOnlyHtml == null) {
+            mDivOnlyHtml = bundle.getString("webpage");
+            Document doc = Jsoup.parse(mDivOnlyHtml);
+            Elements contentDiv = doc.select("div#content");
+            mDivOnlyHtml = "<html><body>" + contentDiv.get(0).getElementsByClass("contextualbody").html() + "</body></html>";
+        }
     }
 
     @Override
@@ -49,7 +54,7 @@ public class JobDetailFragment extends Fragment
         title.setText(mItem.title);
         webdetails.setBackgroundColor(getResources().getColor(R.color.transparent));
 
-        webdetails.loadDataWithBaseURL("", mWebpage, "text/html", "UTF-8", null);
+        webdetails.loadDataWithBaseURL("", mDivOnlyHtml, "text/html", "UTF-8", null);
 
         return view;
     }
@@ -58,7 +63,7 @@ public class JobDetailFragment extends Fragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-
         outState.putSerializable("item", mItem);
+        outState.putString("divonly", mDivOnlyHtml);
     }
 }

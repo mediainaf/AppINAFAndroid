@@ -17,22 +17,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class FeedListFragment extends ListFragment
 {
+    private String mTitle;
     private ArrayList<RSSItem> mItemList = null;
     private RSSListAdapter mRssAdapter = null;
 
-    private String mTitle;
-
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
     private int mActivatedPosition = ListView.INVALID_POSITION;
-
     private Callbacks mCallbacks = sDummyCallbacks;
 
     public interface Callbacks
@@ -71,9 +67,11 @@ public class FeedListFragment extends ListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle args = getArguments();
+        Bundle args;
         if(savedInstanceState != null)
             args = savedInstanceState;
+        else
+            args = getArguments();
 
         mTitle = args.getString("title");
         mItemList = (ArrayList<RSSItem>) args.getSerializable("item_list");
@@ -87,12 +85,6 @@ public class FeedListFragment extends ListFragment
         View rootView = inflater
                 .inflate(R.layout.fragment_feed_list, container, false);
         getActivity().setTitle(mTitle);
-
-        if(savedInstanceState != null && mItemList != null) {
-            ProgressBar pb = (ProgressBar) getActivity().findViewById(R.id.preloader);
-            pb.setVisibility(ProgressBar.INVISIBLE);
-        }
-
         return rootView;
     }
 
@@ -152,14 +144,6 @@ public class FeedListFragment extends ListFragment
         TextView title;
         TextView subtitle;
         TextView description;
-    }
-
-    public void setArrayList(ArrayList<RSSItem> itemList) {
-        mItemList = itemList;
-        ProgressBar pb = (ProgressBar) getActivity().findViewById(R.id.preloader);
-        pb.setVisibility(ProgressBar.INVISIBLE);
-        mRssAdapter = new RSSListAdapter(getActivity(), R.layout.feed_item, mItemList);
-        setListAdapter(mRssAdapter);
     }
 
     private class RSSListAdapter extends ArrayAdapter<RSSItem>

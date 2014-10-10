@@ -19,8 +19,9 @@ import java.util.ArrayList;
 
 public class JobListFragment extends ListFragment {
 
-    ArrayList<JobItem> mItemList;
-    Callbacks mCallbacks;
+    private ArrayList<JobItem> mItemList;
+    private Bundle mArgs = null;
+    private Callbacks mCallbacks;
 
     public interface Callbacks
     {
@@ -111,14 +112,14 @@ public class JobListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle args = getArguments();
         if(savedInstanceState != null)
-            args = savedInstanceState;
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getArguments();
 
-        String title = args.getString("title");
+        String title = mArgs.getString("title");
         getActivity().setTitle(title);
-        mItemList = (ArrayList<JobItem>) args.getSerializable("item_list");
-
+        mItemList = (ArrayList<JobItem>) mArgs.getSerializable("item_list");
         JobListAdapter adapter = new JobListAdapter(getActivity(), R.layout.job_item, mItemList);
         setListAdapter(adapter);
     }
@@ -139,5 +140,11 @@ public class JobListFragment extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable("item", item);
         mCallbacks.onItemSelected(bundle);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

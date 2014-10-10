@@ -154,36 +154,42 @@ public class TelescopeListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemList = new ArrayList<TelescopeItem>();
+        if(savedInstanceState != null)
+        {
+            mItemList = (ArrayList<TelescopeItem>) savedInstanceState.getSerializable("item_list");
+        }
+        else {
+            mItemList = new ArrayList<TelescopeItem>();
 
-        int length = INAF.jsonTelescopes.length();
+            int length = INAF.jsonTelescopes.length();
 
-        for (int i = 0; i < length; i++) {
-            try {
-                JSONObject obj = INAF.jsonTelescopes.getJSONObject(i);
+            for (int i = 0; i < length; i++) {
+                try {
+                    JSONObject obj = INAF.jsonTelescopes.getJSONObject(i);
 
-                boolean show = obj.getString("showonapp").equals("1");
-                if (!show)
-                    continue;
+                    boolean show = obj.getString("showonapp").equals("1");
+                    if (!show)
+                        continue;
 
-                TelescopeItem telItem = new TelescopeItem();
-                telItem.id = obj.getString("id");
-                telItem.name = obj.getString("name");
-                telItem.label = obj.getString("label");
-                telItem.tag = obj.getString("tag");
-                telItem.imgUrl = INAF.telescopeImagePrefixUrl + obj.getString("imgbase") + ".jpg";
-                telItem.coordx = obj.getInt("coordx");
-                telItem.coordy = obj.getInt("coordy");
-                telItem.latitude = obj.getDouble("latitude");
-                telItem.longitude = obj.getDouble("longitude");
-                telItem.phase = obj.getInt("phase");
-                telItem.scope = obj.getInt("scope");
-                telItem.showonweb = obj.getString("showonweb").equals("1");
-                telItem.showonapp = true;
+                    TelescopeItem telItem = new TelescopeItem();
+                    telItem.id = obj.getString("id");
+                    telItem.name = obj.getString("name");
+                    telItem.label = obj.getString("label");
+                    telItem.tag = obj.getString("tag");
+                    telItem.imgUrl = INAF.telescopeImagePrefixUrl + obj.getString("imgbase") + ".jpg";
+                    telItem.coordx = obj.getInt("coordx");
+                    telItem.coordy = obj.getInt("coordy");
+                    telItem.latitude = obj.getDouble("latitude");
+                    telItem.longitude = obj.getDouble("longitude");
+                    telItem.phase = obj.getInt("phase");
+                    telItem.scope = obj.getInt("scope");
+                    telItem.showonweb = obj.getString("showonweb").equals("1");
+                    telItem.showonapp = true;
 
-                mItemList.add(telItem);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    mItemList.add(telItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -200,5 +206,11 @@ public class TelescopeListFragment extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putString("link", INAF.telescopeDetailPrefixUrl+item.tag);
         mCallbacks.onItemSelected(bundle);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("item_list", mItemList);
     }
 }

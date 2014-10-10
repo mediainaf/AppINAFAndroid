@@ -7,18 +7,27 @@ package it.inaf.android;
 import android.os.Bundle;
 
 public class HomeActivity extends NavigationDrawerActivity {
+    Bundle mArgs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            HomeDetailFragment fragment = new HomeDetailFragment();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-            fragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
-        }
+        HomeDetailFragment fragment = new HomeDetailFragment();
+        fragment.setArguments(mArgs);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, fragment)
+                .commit();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

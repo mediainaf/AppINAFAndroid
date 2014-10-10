@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 public class AppDetailActivity extends NavigationDrawerActivity {
+    Bundle mArgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +20,13 @@ public class AppDetailActivity extends NavigationDrawerActivity {
 
         getActionBar().setTitle("");
 
-        AppDetailFragment fragment = new AppDetailFragment();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-        fragment.setArguments(getIntent().getExtras());
+        AppDetailFragment fragment = new AppDetailFragment();
+        fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, fragment)
                 .commit();
@@ -39,5 +44,11 @@ public class AppDetailActivity extends NavigationDrawerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

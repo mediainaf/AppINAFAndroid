@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 public class FeedDetailActivity extends NavigationDrawerActivity {
+    Bundle mArgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,14 +18,17 @@ public class FeedDetailActivity extends NavigationDrawerActivity {
 
         mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
 
-        if (savedInstanceState == null) {
-            FeedDetailFragment fragment = new FeedDetailFragment();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-            fragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
-        }
+        FeedDetailFragment fragment = new FeedDetailFragment();
+
+        fragment.setArguments(mArgs);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, fragment)
+                .commit();
 
         getActionBar().setTitle("");
     }
@@ -41,5 +45,11 @@ public class FeedDetailActivity extends NavigationDrawerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

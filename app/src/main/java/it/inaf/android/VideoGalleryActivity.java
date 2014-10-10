@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
@@ -21,48 +22,46 @@ import java.util.ArrayList;
 public class VideoGalleryActivity extends NavigationDrawerActivity
         implements JSONRequestFragment.Callbacks, VideoGalleryFragment.Callbacks {
 
-//    private boolean mTwoPane;
-
-    boolean mLoading = true;
-
+    private static final String mYoutubeFeedUrl = "http://gdata.youtube.com/feeds/api/users/inaftv/uploads?alt=json&max-results=50";
+    private Bundle mArgs;
+    private ArrayList<VideoItem> mItemList = null;
     public static final int JSON_VIDEO_YOUTUBE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            VideoGalleryFragment fragment = new VideoGalleryFragment();
-
-            fragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
-        }
+        FragmentManager fm = getSupportFragmentManager();
+        JSONRequestFragment requestYoutubeJson = (JSONRequestFragment) fm.findFragmentByTag("json_request_youtube");
 
         if(savedInstanceState != null) {
-            mLoading = savedInstanceState.getBoolean("loading");
+            mArgs = savedInstanceState.getBundle("args");
+        }
+        else {
+            mArgs = getIntent().getExtras();
         }
 
-        if(mLoading) {
+        mItemList = (ArrayList<VideoItem>) mArgs.getSerializable("item_list");
+
+        // if there is no request ongoing and no previous request results
+        if(requestYoutubeJson == null && mItemList == null)
+        {
+            requestYoutubeJson = new JSONRequestFragment();
+            fm.beginTransaction().add(requestYoutubeJson, "json_request_youtube").commit();
+            requestYoutubeJson.start(VideoGalleryActivity.JSON_VIDEO_YOUTUBE, mYoutubeFeedUrl, false);
             ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
             pb.setVisibility(ProgressBar.VISIBLE);
         }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        VideoGalleryFragment fragment = (VideoGalleryFragment) fragmentManager.findFragmentByTag("video_gallery_fragment");
-        if(fragment == null) {
-            fragment = new VideoGalleryFragment();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment, "video_gallery_fragment").commit();
+        else {
+            replaceFragment();
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putBoolean("loading", mLoading);
+        if(mItemList != null)
+            outState.putSerializable("item_list", mItemList);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
     public void onResponse(int id, JSONObject response) {
         if (id == JSON_VIDEO_YOUTUBE) {
 
-            ArrayList<VideoItem> list = new ArrayList<VideoItem>();
+            mItemList = new ArrayList<VideoItem>();
 
             try {
                 JSONArray entries = response.getJSONObject("feed").getJSONArray("entry");
@@ -92,18 +91,16 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
                     item.visualizationCounter = entry.getJSONObject("yt$statistics").getString("viewCount");
                     item.description = entry.getJSONObject("content").getString("$t");
 
-                    list.add(item);
+                    mItemList.add(item);
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            VideoGalleryFragment frag = (VideoGalleryFragment)
-                    getSupportFragmentManager().findFragmentByTag("video_gallery_fragment");
-
-            frag.setArrayList(list);
-            mLoading = false;
+            ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
+            pb.setVisibility(ProgressBar.INVISIBLE);
+            replaceFragment();
         }
     }
 
@@ -130,5 +127,16 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
         detailIntent.putExtras(args);
         startActivity(detailIntent);
         overridePendingTransition(0, 0);
+    }
+
+    void replaceFragment() {
+        Bundle args = new Bundle();
+        args.putString("title", mTitle);
+        args.putSerializable("item_list", mItemList);
+        VideoGalleryFragment fragment = new VideoGalleryFragment();
+        fragment.setArguments(args);
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .replace(R.id.container, fragment, "video_gallery_fragment" + mTitle).commit();
     }
 }

@@ -118,29 +118,35 @@ public class AppsFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItemList = new ArrayList<AppItem>();
+        if(savedInstanceState != null)
+        {
+            mItemList = (ArrayList<AppItem>) savedInstanceState.getSerializable("item_list");
+        }
+        else {
+            mItemList = new ArrayList<AppItem>();
 
-        int length = INAF.jsonApps.length();
+            int length = INAF.jsonApps.length();
 
-        for(int i=0; i<length; i++) {
-            try {
-                AppItem appItem = new AppItem();
-                JSONObject obj = INAF.jsonApps.getJSONObject(i);
-                appItem.id = obj.getString("id");
-                appItem.name = obj.getString("name");
-                appItem.descr = obj.getString("descr");
-                appItem.authors = obj.getString("authors");
-                appItem.iconurl = obj.getString("iconurl");
-                appItem.infourl = obj.getString("infourl");
-                appItem.iosurl = obj.getString("iosurl");
-                appItem.androidurl = obj.getString("androidurl");
-                appItem.price = obj.getString("price");
-                appItem.lang = obj.getString("lang");
-                appItem.notes = obj.getString("notes");
+            for (int i = 0; i < length; i++) {
+                try {
+                    AppItem appItem = new AppItem();
+                    JSONObject obj = INAF.jsonApps.getJSONObject(i);
+                    appItem.id = obj.getString("id");
+                    appItem.name = obj.getString("name");
+                    appItem.descr = obj.getString("descr");
+                    appItem.authors = obj.getString("authors");
+                    appItem.iconurl = obj.getString("iconurl");
+                    appItem.infourl = obj.getString("infourl");
+                    appItem.iosurl = obj.getString("iosurl");
+                    appItem.androidurl = obj.getString("androidurl");
+                    appItem.price = obj.getString("price");
+                    appItem.lang = obj.getString("lang");
+                    appItem.notes = obj.getString("notes");
 
-                mItemList.add(appItem);
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    mItemList.add(appItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -158,5 +164,11 @@ public class AppsFragment extends ListFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable("link", item.infourl);
         mCallbacks.onItemSelected(bundle);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("item_list", mItemList);
     }
 }

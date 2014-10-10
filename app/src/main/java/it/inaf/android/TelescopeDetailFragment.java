@@ -51,7 +51,6 @@ public class TelescopeDetailFragment extends Fragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-
         outState.putString("link", mLink);
     }
 }

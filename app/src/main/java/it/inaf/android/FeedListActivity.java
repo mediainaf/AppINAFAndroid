@@ -31,42 +31,42 @@ import java.util.regex.Pattern;
 public class FeedListActivity extends NavigationDrawerActivity
         implements StringRequestFragment.Callbacks, FeedListFragment.Callbacks {
 
-//    private boolean mTwoPane;
-
-    StringRequestFragment mFeedListRequest;
-
-    boolean mLoading = false;
+    Bundle mArgs;
+    ArrayList<RSSItem> mItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FragmentManager fm = getSupportFragmentManager();
-        mFeedListRequest = (StringRequestFragment) fm.findFragmentByTag("feed_list_request");
-
-        if (mFeedListRequest == null) {
-            mFeedListRequest = new StringRequestFragment();
-            fm.beginTransaction().add(mFeedListRequest, "feed_list_request").commit();
-        }
+        StringRequestFragment request = (StringRequestFragment) fm.findFragmentByTag("feed_list_request");
 
         if(savedInstanceState != null) {
-            mLoading = savedInstanceState.getBoolean("loading");
+            mArgs = savedInstanceState.getBundle("args");
         }
         else {
-            mLoading = true;
-            Intent intent = getIntent();
-            mFeedListRequest.start(Request.Method.GET, intent.getStringExtra("feed_url"));
+            mArgs = getIntent().getExtras();
         }
 
-        if(mLoading) {
+        mItemList = (ArrayList<RSSItem>) mArgs.getSerializable("item_list");
+
+        // if there is no request ongoing and no previous request results
+        if(request == null && mItemList == null)
+        {
+            request = new StringRequestFragment();
+            fm.beginTransaction().add(request, "feed_list_request").commit();
+            request.start(Request.Method.GET, mArgs.getString("feed_url"));
             ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
             pb.setVisibility(ProgressBar.VISIBLE);
+        }
+        else {
+            replaceFragment();
         }
     }
 
     @Override
     public void onResponse(String xmlString) {
-        ArrayList<RSSItem> itemList = new ArrayList<RSSItem>();
+        mItemList = new ArrayList<RSSItem>();
 
         // parse xml
         try {
@@ -101,7 +101,7 @@ public class FeedListActivity extends NavigationDrawerActivity
                 String contentCDATA = contentElement.getText();
                 rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
 
-                itemList.add(rssItem);
+                mItemList.add(rssItem);
             }
         } catch (JDOMException e1) {
             e1.printStackTrace();
@@ -109,24 +109,10 @@ public class FeedListActivity extends NavigationDrawerActivity
             e1.printStackTrace();
         }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FeedListFragment target = (FeedListFragment) fragmentManager.findFragmentByTag("feedlist" + mTitle);
-
-        if(target != null) {
-            target.setArrayList(itemList);
-        }
-        else {
-            Bundle args = new Bundle();
-            args.putString("title", mTitle);
-            args.putSerializable("item_list", itemList);
-            FeedListFragment fragment = new FeedListFragment();
-            fragment.setArguments(args);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragment, "feedlist" + mTitle).commit();
-        }
         ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
         pb.setVisibility(ProgressBar.INVISIBLE);
-        mLoading = false;
+        replaceFragment();
+
 /*        if (findViewById(R.id.item_detail_container) != null) { TODO handle two-panel
             // The detail container view will be present only in the
             // large-screen layouts (res/values-large and
@@ -171,7 +157,18 @@ public class FeedListActivity extends NavigationDrawerActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if(mItemList != null)
+            outState.putSerializable("item_list", mItemList);
+    }
 
-        outState.putBoolean("loading", mLoading);
+    void replaceFragment() {
+        Bundle args = new Bundle();
+        args.putString("title", mTitle);
+        args.putSerializable("item_list", mItemList);
+        FeedListFragment fragment = new FeedListFragment();
+        fragment.setArguments(args);
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .replace(R.id.container, fragment, "feedlist" + mTitle).commit();
     }
 }

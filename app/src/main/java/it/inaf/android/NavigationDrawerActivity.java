@@ -25,16 +25,19 @@ public class NavigationDrawerActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FragmentManager fm = getSupportFragmentManager();
-
         setContentView(R.layout.activity_navigation_drawer);
 
+        FragmentManager fm = getSupportFragmentManager();
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 fm.findFragmentById(R.id.navigation_drawer);
 
-        Bundle extras = getIntent().getExtras();
-        if(extras != null) {
-            mPosition = extras.getInt("nav_position");
+        if(savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt("nav_position");
+        }
+        else {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null)
+                mPosition = extras.getInt("nav_position");
         }
 
         // Set up the drawer.
@@ -172,5 +175,11 @@ public class NavigationDrawerActivity extends ActionBarActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("nav_pos", mPosition);
     }
 }

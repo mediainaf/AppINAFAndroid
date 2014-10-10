@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 public class VideoDetailActivity extends NavigationDrawerActivity {
+    private Bundle mArgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,14 +18,16 @@ public class VideoDetailActivity extends NavigationDrawerActivity {
 
         mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
 
-        if (savedInstanceState == null) {
-            VideoDetailFragment fragment = new VideoDetailFragment();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-            fragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
-                    .commit();
-        }
+        VideoDetailFragment fragment = new VideoDetailFragment();
+        fragment.setArguments(mArgs);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, fragment)
+                .commit();
 
         getActionBar().setTitle("");
     }
@@ -41,5 +44,11 @@ public class VideoDetailActivity extends NavigationDrawerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

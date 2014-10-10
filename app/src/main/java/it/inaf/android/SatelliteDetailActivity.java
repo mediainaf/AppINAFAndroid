@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 public class SatelliteDetailActivity extends NavigationDrawerActivity {
+    private Bundle mArgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +20,13 @@ public class SatelliteDetailActivity extends NavigationDrawerActivity {
 
         getActionBar().setTitle("");
 
-        SatelliteDetailFragment fragment = new SatelliteDetailFragment();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-        fragment.setArguments(getIntent().getExtras());
+        SatelliteDetailFragment fragment = new SatelliteDetailFragment();
+        fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, fragment)
                 .commit();
@@ -39,5 +44,11 @@ public class SatelliteDetailActivity extends NavigationDrawerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }

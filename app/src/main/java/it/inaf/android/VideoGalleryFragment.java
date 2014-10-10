@@ -9,7 +9,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 
 public class VideoGalleryFragment extends Fragment {
 
-    private static final String mYoutubeFeedUrl = "http://gdata.youtube.com/feeds/api/users/inaftv/uploads?alt=json&max-results=50";
     private VideoListAdapter mVideoAdapter = null;
     private ArrayList<VideoItem> mItemList = null;
     int mThumbSize = 0;
@@ -37,7 +37,7 @@ public class VideoGalleryFragment extends Fragment {
 
     public interface Callbacks
     {
-        // Called when a feed in the list is selected.
+        // Called when a video item in the list is selected.
         void onItemSelected(Bundle args);
     }
 
@@ -63,38 +63,21 @@ public class VideoGalleryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        JSONRequestFragment requestYoutubeJson = (JSONRequestFragment) fm.findFragmentByTag("json_request_youtube");
-        if (requestYoutubeJson == null) {
-            requestYoutubeJson = new JSONRequestFragment();
-            fm.beginTransaction().add(requestYoutubeJson, "json_request_youtube").commit();
-        }
-        requestYoutubeJson.start(VideoGalleryActivity.JSON_VIDEO_YOUTUBE, mYoutubeFeedUrl, false);
-        ProgressBar pb = (ProgressBar) getActivity().findViewById(R.id.preloader);
-        pb.setVisibility(ProgressBar.VISIBLE);
+        Bundle args;
+        if(savedInstanceState != null)
+            args = savedInstanceState;
+        else
+            args = getArguments();
+
+        mItemList = (ArrayList<VideoItem>) args.getSerializable("item_list");
+        mVideoAdapter = new VideoListAdapter(getActivity(), R.layout.video_item, mItemList);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.video_gallery_fragment, container, false);
-    }
+        mGridView = (GridView) inflater.inflate(R.layout.video_gallery_fragment, container, false);
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    public void setArrayList(ArrayList<VideoItem> itemList) {
-
-        if(mVideoAdapter != null)
-            return;
-
-        mItemList = itemList;
-
-        mVideoAdapter = new VideoListAdapter(getActivity(), R.layout.video_gallery_fragment, mItemList);
-        mGridView = (GridView) getActivity().findViewById(R.id.video_gallery);
-        mGridView.setAdapter(mVideoAdapter);
         mGridView.setOnItemClickListener(new GridView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -110,10 +93,10 @@ public class VideoGalleryFragment extends Fragment {
                 args.putInt("position", position);
                 mCallbacks.onItemSelected(args);
             }
-        } );
+        });
 
         mThumbSize = getResources().getDimensionPixelSize(R.dimen.thumb_size);
-        mThumbSpacing = 0;//getResources().getDimensionPixelSize(R.dimen.thumb_spacing);
+        mThumbSpacing = 0;
 
         mGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -127,12 +110,10 @@ public class VideoGalleryFragment extends Fragment {
                         mVideoAdapter.setItemHeight(columnWidth);
 
                     }
-                }
-                else
-                {
+                } else {
                     // second pass
                     mGridView.setVisibility(View.VISIBLE);
-                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                         mGridView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     } else {
                         mGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -142,6 +123,16 @@ public class VideoGalleryFragment extends Fragment {
                 }
             }
         });
+
+        mGridView.setAdapter(mVideoAdapter);
+
+        return mGridView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("item_list", mItemList);
     }
 
     static class ViewHolder

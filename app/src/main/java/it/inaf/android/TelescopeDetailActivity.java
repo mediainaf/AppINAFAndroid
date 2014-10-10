@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 public class TelescopeDetailActivity extends NavigationDrawerActivity {
+    private Bundle mArgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +20,13 @@ public class TelescopeDetailActivity extends NavigationDrawerActivity {
 
         getActionBar().setTitle("");
 
-        TelescopeDetailFragment fragment = new TelescopeDetailFragment();
+        if(savedInstanceState != null)
+            mArgs = savedInstanceState.getBundle("args");
+        else
+            mArgs = getIntent().getExtras();
 
-        fragment.setArguments(getIntent().getExtras());
+        TelescopeDetailFragment fragment = new TelescopeDetailFragment();
+        fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, fragment)
                 .commit();
@@ -39,5 +44,11 @@ public class TelescopeDetailActivity extends NavigationDrawerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
     }
 }
