@@ -37,7 +37,7 @@ public class JobDetailActivity extends NavigationDrawerActivity
         int id = item.getItemId();
         if (id == android.R.id.home) {
             Intent upIntent = NavUtils.getParentActivityIntent(this);
-            upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             NavUtils.navigateUpTo(this, upIntent);
             overridePendingTransition(0, 0);
 
