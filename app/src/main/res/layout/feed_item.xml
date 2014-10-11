@@ -29,7 +29,7 @@
       android:layout_marginStart="10dp"
       android:maxLines="2"
       android:text="Title"
-      android:textSize="15sp"
+      android:textSize="@dimen/title_size"
       android:textStyle="bold" />
     <TextView
       android:id="@+id/txtSubtitle"
@@ -38,7 +38,7 @@
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
       android:text="Subtitle"
-      android:textSize="10sp"
+      android:textSize="@dimen/small_size"
       android:textStyle="italic" />
     <TextView
       android:id="@+id/txtDescription"
@@ -48,7 +48,7 @@
       android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
       android:text="Description"
-      android:textSize="12sp"
+      android:textSize="@dimen/normal_size"
       android:textStyle="normal"
       android:ellipsize="end" />
   </LinearLayout>

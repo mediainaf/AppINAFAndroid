@@ -14,12 +14,12 @@
         android:layout_height="wrap_content"
         android:text="Title"
         android:layout_marginBottom="5dp"
-        android:textSize="16sp" />
+        android:textSize="@dimen/title_size" />
     <TextView
         android:id="@+id/job_list_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Date"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_size"
         android:layout_gravity="end" />
 </LinearLayout>

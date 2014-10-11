@@ -96,20 +96,19 @@ public class VideoGalleryFragment extends Fragment {
         });
 
         mThumbSize = getResources().getDimensionPixelSize(R.dimen.thumb_size);
-        mThumbSpacing = 0;
+        mThumbSpacing = getResources().getDimensionPixelSize(R.dimen.thumb_spacing);
 
         mGridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (mVideoAdapter.getNumColumns() == 0) {
                     // first pass
-                    final int numColumns = (int) Math.floor(mGridView.getWidth() / (mThumbSize + mThumbSpacing));
-                    if (numColumns > 0) {
-                        final int columnWidth = (mGridView.getWidth() / numColumns) - mThumbSpacing;
-                        mVideoAdapter.setNumColumns(numColumns);
-                        mVideoAdapter.setItemHeight(columnWidth);
-
-                    }
+                    int numColumns = (int) Math.floor(INAF.width / (mThumbSize + mThumbSpacing));
+                    if (numColumns == 0)
+                        numColumns = 1;
+                     final int columnWidth = (INAF.width / numColumns) - mThumbSpacing;
+                     mVideoAdapter.setNumColumns(numColumns);
+                     mVideoAdapter.setItemHeight(columnWidth);
                 } else {
                     // second pass
                     mGridView.setVisibility(View.VISIBLE);

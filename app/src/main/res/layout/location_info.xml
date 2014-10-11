@@ -7,22 +7,22 @@
         android:id="@+id/location_info_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="@dimen/title_size"
         android:textStyle="bold" />
     <TextView
         android:id="@+id/location_info_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp" />
+        android:textSize="@dimen/normal_size" />
     <TextView
         android:id="@+id/location_info_website"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="@dimen/normal_size"
         android:autoLink="web"/>
     <TextView
         android:id="@+id/location_info_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp" />
+        android:textSize="@dimen/normal_size" />
 </LinearLayout>
