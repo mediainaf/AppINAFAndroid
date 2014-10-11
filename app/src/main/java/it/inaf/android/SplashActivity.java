@@ -5,6 +5,7 @@
 package it.inaf.android;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -155,5 +156,17 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
             finish();
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        ImageView image = (ImageView) findViewById(R.id.splash_image);
+
+        // swap image
+        if (INAF.landscape)
+            image.setImageResource(R.drawable.galileo);
+        else
+            image.setImageResource(R.drawable.galileo_l);
     }
 }
