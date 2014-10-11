@@ -108,7 +108,7 @@ public class VideoGalleryFragment extends Fragment {
                         numColumns = 1;
                      final int columnWidth = (INAF.width / numColumns) - mThumbSpacing;
                      mVideoAdapter.setNumColumns(numColumns);
-                     mVideoAdapter.setItemHeight(columnWidth);
+                     mVideoAdapter.setItemHeight((int)(0.75*columnWidth));
                 } else {
                     // second pass
                     mGridView.setVisibility(View.VISIBLE);
