@@ -33,7 +33,7 @@ public class JobListActivity extends NavigationDrawerActivity
     private String jobsUrl = "http://www.inaf.it/it/lavora-con-noi/concorsi-inaf/rss";
 
     Bundle mArgs;
-    ArrayList<JobItem> mItemList;
+    ArrayList<JobItem> mItemList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +136,8 @@ public class JobListActivity extends NavigationDrawerActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("args", mArgs);
-        outState.putSerializable("item_list", mItemList);
+        if(mItemList != null)
+            outState.putSerializable("item_list", mItemList);
     }
 
     void replaceFragment() {

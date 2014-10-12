@@ -157,6 +157,7 @@ public class FeedListActivity extends NavigationDrawerActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBundle("args", mArgs);
         if(mItemList != null)
             outState.putSerializable("item_list", mItemList);
     }
