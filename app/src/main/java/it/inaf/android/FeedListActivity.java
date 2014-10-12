@@ -80,7 +80,7 @@ public class FeedListActivity extends NavigationDrawerActivity
                 Element item = items.get(i);
 
                 rssItem.title = item.getChild("title").getText();
-                rssItem.date = DateFormatter.format(item.getChild("pubDate").getText());
+                rssItem.date = DateFormatter.formatType1(item.getChild("pubDate").getText());
                 rssItem.link = item.getChild("link").getText();
                 Element authorElement = item.getChild("creator", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
                 rssItem.author = authorElement.getText();

@@ -92,7 +92,7 @@ public class JobListActivity extends NavigationDrawerActivity
                 jobItem.description = descClean.trim();
                 Element dateElement = item.getChild("date", Namespace.getNamespace("http://purl.org/dc/elements/1.1/"));
                 jobItem.plainDate = dateElement.getText();
-                jobItem.date = DateFormatter.format(dateElement.getText());
+                jobItem.date = DateFormatter.formatType3(dateElement.getText());
                 Element contentElement = item.getChild("encoded", Namespace.getNamespace("http://purl.org/rss/1.0/modules/content/"));
                 String contentCDATA = contentElement.getText();
                 jobItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");

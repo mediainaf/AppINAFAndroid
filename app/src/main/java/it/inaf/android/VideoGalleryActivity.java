@@ -87,7 +87,7 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
                     String url = entry.getJSONObject("id").getString("$t");
                     String youtubeId = url.substring(url.replaceAll("\\\\", "/").lastIndexOf("/"));
                     item.videoUrl = "<body style='margin:0;padding:0;'><div class='embed-container'><iframe src=\"http://www.youtube.com/embed/" + youtubeId + "?modestbranding=1&showinfo=0\" frameborder=\"0\" allowfullscreen></iframe></div></body>";
-                    item.date = DateFormatter.format(entry.getJSONObject("published").getString("$t"));
+                    item.date = DateFormatter.formatType2(entry.getJSONObject("published").getString("$t"));
                     item.thumbnailUrl = entry.getJSONObject("media$group").getJSONArray("media$thumbnail").getJSONObject(0).getString("url");
                     item.visualizationCounter = entry.getJSONObject("yt$statistics").getString("viewCount");
                     item.description = entry.getJSONObject("content").getString("$t");
