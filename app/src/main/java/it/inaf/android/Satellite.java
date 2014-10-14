@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
-class Satellite {
+public class Satellite {
 
     public String name;
 
