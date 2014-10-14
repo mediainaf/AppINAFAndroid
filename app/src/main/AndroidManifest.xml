@@ -94,6 +94,15 @@
         </activity>
 
         <activity
+            android:name=".TelescopeMapActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:parentActivityName=".TelescopeListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TelescopeListActivity" />
+        </activity>
+
+        <activity
             android:name=".TelescopeDetailActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:parentActivityName=".TelescopeListActivity" >
