@@ -26,7 +26,7 @@ public class VideoDetailActivity extends NavigationDrawerActivity {
         VideoDetailFragment fragment = new VideoDetailFragment();
         fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, "fragment_container")
                 .commit();
 
         getActionBar().setTitle("");

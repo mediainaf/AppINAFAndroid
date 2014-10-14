@@ -32,16 +32,9 @@ public class SatelliteMapActivity extends NavigationDrawerActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        stopLoading();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            startLoading();
             Intent upIntent = NavUtils.getParentActivityIntent(this);
             upIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             NavUtils.navigateUpTo(this, upIntent);

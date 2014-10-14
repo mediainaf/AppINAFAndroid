@@ -28,7 +28,7 @@ public class TelescopeDetailActivity extends NavigationDrawerActivity {
         TelescopeDetailFragment fragment = new TelescopeDetailFragment();
         fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, "fragment_container")
                 .commit();
     }
 

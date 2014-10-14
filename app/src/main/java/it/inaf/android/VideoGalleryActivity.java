@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-import com.android.volley.Request;
 import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
@@ -49,11 +48,10 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
             requestYoutubeJson = new JSONRequestFragment();
             fm.beginTransaction().add(requestYoutubeJson, "json_request_youtube").commit();
             requestYoutubeJson.start(VideoGalleryActivity.JSON_VIDEO_YOUTUBE, mYoutubeFeedUrl, false);
-            ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
-            pb.setVisibility(ProgressBar.VISIBLE);
+            startLoading();
         }
         else {
-            replaceFragment();
+            addFragment();
         }
     }
 
@@ -99,9 +97,7 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
                 e.printStackTrace();
             }
 
-            ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
-            pb.setVisibility(ProgressBar.INVISIBLE);
-            replaceFragment();
+            addFragment();
         }
     }
 
@@ -121,7 +117,7 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
             FeedDetailFragment fragment = new FeedDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
+                    .add(R.id.item_detail_container, fragment)
                     .commit();
         }*/
         Intent detailIntent = new Intent(this, VideoDetailActivity.class);
@@ -130,7 +126,7 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
         overridePendingTransition(0, 0);
     }
 
-    void replaceFragment() {
+    void addFragment() {
         Bundle args = new Bundle();
         args.putString("title", mTitle);
         args.putSerializable("item_list", mItemList);
@@ -138,6 +134,7 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
         fragment.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .replace(R.id.container, fragment, "video_gallery_fragment" + mTitle).commit();
+                .add(R.id.container, fragment, "fragment_container").commit();
+        stopLoading();
     }
 }

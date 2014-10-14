@@ -117,8 +117,7 @@ public class VideoGalleryFragment extends Fragment {
                     } else {
                         mGridView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
-                    ProgressBar pb = (ProgressBar) getActivity().findViewById(R.id.preloader);
-                    pb.setVisibility(ProgressBar.INVISIBLE);
+                    ((NavigationDrawerActivity)getActivity()).stopLoading();
                 }
             }
         });

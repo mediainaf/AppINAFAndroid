@@ -32,12 +32,6 @@ public class SatelliteListActivity extends NavigationDrawerActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        stopLoading();
-    }
-
-    @Override
     public void onItemSelected(Bundle args) {
         Intent detailIntent = new Intent(this, SatelliteDetailActivity.class);
         detailIntent.putExtras(args);
@@ -56,7 +50,6 @@ public class SatelliteListActivity extends NavigationDrawerActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_map:
-                startLoading();
                 Intent mapIntent = new Intent(this, SatelliteMapActivity.class);
                 mapIntent.putExtras(mArgs);
                 startActivity(mapIntent);

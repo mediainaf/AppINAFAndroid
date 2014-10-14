@@ -21,7 +21,7 @@ public class HomeActivity extends NavigationDrawerActivity {
         HomeDetailFragment fragment = new HomeDetailFragment();
         fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, "fragment_container")
                 .commit();
     }
 

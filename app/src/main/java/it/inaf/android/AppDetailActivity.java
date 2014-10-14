@@ -28,7 +28,7 @@ public class AppDetailActivity extends NavigationDrawerActivity {
         AppDetailFragment fragment = new AppDetailFragment();
         fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, "fragment_container")
                 .commit();
     }
 

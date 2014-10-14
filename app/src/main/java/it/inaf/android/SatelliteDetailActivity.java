@@ -28,7 +28,7 @@ public class SatelliteDetailActivity extends NavigationDrawerActivity {
         SatelliteDetailFragment fragment = new SatelliteDetailFragment();
         fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, "fragment_container")
                 .commit();
     }
 

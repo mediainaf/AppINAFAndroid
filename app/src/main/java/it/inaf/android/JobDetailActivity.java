@@ -17,14 +17,6 @@ public class JobDetailActivity extends NavigationDrawerActivity
         implements StringRequestFragment.Callbacks {
     Bundle mArgs;
 
-    void addFragment() {
-        JobDetailFragment fragment = new JobDetailFragment();
-        fragment.setArguments(mArgs);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
-                .commit();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +40,7 @@ public class JobDetailActivity extends NavigationDrawerActivity
 
             JobItem item = (JobItem) mArgs.getSerializable("item");
             jobsRequest.start(Request.Method.GET, item.link);
+            startLoading();
         }
     }
 
@@ -80,5 +73,14 @@ public class JobDetailActivity extends NavigationDrawerActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("args", mArgs);
+    }
+
+    void addFragment() {
+        JobDetailFragment fragment = new JobDetailFragment();
+        fragment.setArguments(mArgs);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, fragment, "fragment_container")
+                .commit();
+        stopLoading();
     }
 }

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -56,11 +55,10 @@ public class FeedListActivity extends NavigationDrawerActivity
             request = new StringRequestFragment();
             fm.beginTransaction().add(request, "feed_list_request").commit();
             request.start(Request.Method.GET, mArgs.getString("feed_url"));
-            ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
-            pb.setVisibility(ProgressBar.VISIBLE);
+            startLoading();
         }
         else {
-            replaceFragment();
+            addFragment();
         }
     }
 
@@ -109,9 +107,7 @@ public class FeedListActivity extends NavigationDrawerActivity
             e1.printStackTrace();
         }
 
-        ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
-        pb.setVisibility(ProgressBar.INVISIBLE);
-        replaceFragment();
+        addFragment();
 
 /*        if (findViewById(R.id.item_detail_container) != null) { TODO handle two-panel
             // The detail container view will be present only in the
@@ -145,7 +141,7 @@ public class FeedListActivity extends NavigationDrawerActivity
             FeedDetailFragment fragment = new FeedDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
+                    .add(R.id.item_detail_container, fragment)
                     .commit();
         }*/
         Intent detailIntent = new Intent(this, FeedDetailActivity.class);
@@ -162,7 +158,7 @@ public class FeedListActivity extends NavigationDrawerActivity
             outState.putSerializable("item_list", mItemList);
     }
 
-    void replaceFragment() {
+    void addFragment() {
         Bundle args = new Bundle();
         args.putString("title", mTitle);
         args.putSerializable("item_list", mItemList);
@@ -170,6 +166,7 @@ public class FeedListActivity extends NavigationDrawerActivity
         fragment.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .replace(R.id.container, fragment, "feedlist" + mTitle).commit();
+                .add(R.id.container, fragment, "fragment_container").commit();
+        stopLoading();
     }
 }

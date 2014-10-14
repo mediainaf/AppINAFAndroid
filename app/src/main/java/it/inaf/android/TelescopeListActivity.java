@@ -23,7 +23,7 @@ public class TelescopeListActivity extends NavigationDrawerActivity
         TelescopeListFragment fragment = new TelescopeListFragment();
         fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, "fragment_container")
                 .commit();
     }
 

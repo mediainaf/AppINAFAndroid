@@ -7,7 +7,6 @@ package it.inaf.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -53,14 +52,11 @@ public class JobListActivity extends NavigationDrawerActivity
         if(request == null && mItemList == null) {
             StringRequestFragment jobsRequest = new StringRequestFragment();
             fm.beginTransaction().add(jobsRequest, "job_request").commit();
-
-            ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
-            pb.setVisibility(ProgressBar.VISIBLE);
-
             jobsRequest.start(Request.Method.GET, jobsUrl);
+            startLoading();
         }
         else {
-            replaceFragment();
+            addFragment();
         }
     }
 
@@ -114,9 +110,7 @@ public class JobListActivity extends NavigationDrawerActivity
         });
 
         mItemList = itemList;
-        ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
-        pb.setVisibility(ProgressBar.INVISIBLE);
-        replaceFragment();
+        addFragment();
     }
 
     @Override
@@ -140,7 +134,7 @@ public class JobListActivity extends NavigationDrawerActivity
             outState.putSerializable("item_list", mItemList);
     }
 
-    void replaceFragment() {
+    void addFragment() {
         FragmentManager fm = getSupportFragmentManager();
         Bundle args = new Bundle();
         args.putString("title", mTitle);
@@ -148,6 +142,7 @@ public class JobListActivity extends NavigationDrawerActivity
         JobListFragment fragment = new JobListFragment();
         fragment.setArguments(args);
         fm.beginTransaction()
-                .replace(R.id.container, fragment, "joblist").commit();
+                .add(R.id.container, fragment, "fragment_container").commit();
+        stopLoading();
     }
 }
