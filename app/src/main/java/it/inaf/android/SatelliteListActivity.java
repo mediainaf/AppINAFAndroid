@@ -6,6 +6,9 @@ package it.inaf.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class SatelliteListActivity extends NavigationDrawerActivity
         implements SatelliteListFragment.Callbacks {
@@ -24,8 +27,14 @@ public class SatelliteListActivity extends NavigationDrawerActivity
         SatelliteListFragment fragment = new SatelliteListFragment();
         fragment.setArguments(mArgs);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, "fragment_container")
                 .commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        stopLoading();
     }
 
     @Override
@@ -47,6 +56,7 @@ public class SatelliteListActivity extends NavigationDrawerActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_map:
+                startLoading();
                 Intent mapIntent = new Intent(this, SatelliteMapActivity.class);
                 mapIntent.putExtras(mArgs);
                 startActivity(mapIntent);

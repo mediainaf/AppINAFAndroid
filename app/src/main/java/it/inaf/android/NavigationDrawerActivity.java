@@ -6,12 +6,15 @@ package it.inaf.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 public class NavigationDrawerActivity extends ActionBarActivity
         implements NavigationDrawerFragment.Callbacks {
@@ -181,5 +184,35 @@ public class NavigationDrawerActivity extends ActionBarActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("nav_pos", mPosition);
+    }
+
+    public void startLoading() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = fm.findFragmentByTag("fragment_container");
+        if(f != null) {
+            if (f.isVisible()) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.hide(f);
+                ft.commit();
+            }
+        }
+
+        ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
+        pb.setVisibility(ProgressBar.VISIBLE);
+    }
+
+    void stopLoading() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = fm.findFragmentByTag("fragment_container");
+        if(f != null) {
+            if (f.isHidden()) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.show(f);
+                ft.commit();
+            }
+        }
+
+        ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
+        pb.setVisibility(ProgressBar.INVISIBLE);
     }
 }
