@@ -112,9 +112,6 @@ public class SatelliteMapFragment extends Fragment {
             return;
 
         final GoogleMap map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        // center on Italy
-//
-        // TODO zoom out
         map.setInfoWindowAdapter(new WindowAdapter());
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
