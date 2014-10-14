@@ -109,6 +109,15 @@
         </activity>
 
         <activity
+            android:name=".SatelliteMapActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:parentActivityName=".SatelliteListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SatelliteListActivity" />
+        </activity>
+
+        <activity
             android:name=".SatelliteDetailActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:parentActivityName=".SatelliteListActivity" >

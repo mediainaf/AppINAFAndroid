@@ -37,6 +37,27 @@ public class SatelliteListActivity extends NavigationDrawerActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.satellite_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_open_map:
+                Intent mapIntent = new Intent(this, SatelliteMapActivity.class);
+                mapIntent.putExtras(mArgs);
+                startActivity(mapIntent);
+                overridePendingTransition(0, 0);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("args", mArgs);
