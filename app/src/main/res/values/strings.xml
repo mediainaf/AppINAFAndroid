@@ -19,4 +19,5 @@
     <string name="title_video_detail">Video Details</string>
     <string name="image_description">Image</string>
     <string name="action_open_map">Map</string>
+    <string name="action_open_webcam">Webcams</string>
 </resources>

@@ -9,6 +9,10 @@
     <dimen name="thumb_spacing">3dp</dimen>
     <dimen name="thumb_padding">6dp</dimen>
 
+    <dimen name="webcam_title_size">16sp</dimen>
+    <dimen name="webcam_size">400dp</dimen>
+    <dimen name="webcam_spacing">3dp</dimen>
+
     <dimen name="home_text_size">16sp</dimen>
 
     <dimen name="big_size">24sp</dimen>

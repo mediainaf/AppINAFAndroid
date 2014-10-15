@@ -96,6 +96,11 @@ public class TelescopeListActivity extends NavigationDrawerActivity
                 startActivity(mapIntent);
                 overridePendingTransition(0, 0);
                 return true;
+            case R.id.action_open_webcam:
+                Intent webcamIntent = new Intent(this, WebcamActivity.class);
+                startActivity(webcamIntent);
+                overridePendingTransition(0, 0);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

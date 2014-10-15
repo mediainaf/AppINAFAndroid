@@ -3,5 +3,9 @@
     <item android:id="@+id/action_open_map"
         android:icon="@drawable/pinpoint"
         android:title="@string/action_open_map"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/action_open_webcam"
+        android:icon="@drawable/webcam"
+        android:title="@string/action_open_webcam"
+        app:showAsAction="ifRoom|withText"/>
 </menu>
