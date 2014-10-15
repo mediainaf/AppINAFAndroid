@@ -68,6 +68,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 mTitle = getString(R.string.title_section2);
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                feedListIntent.putExtra("feed_type", "news");
                 feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
                 feedListIntent.putExtra("nav_position", position);
                 startActivity(feedListIntent);
@@ -79,6 +80,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 mTitle = getString(R.string.title_section3);
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                feedListIntent.putExtra("feed_type", "events");
                 feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/eventi/feed");
                 feedListIntent.putExtra("nav_position", position);
                 startActivity(feedListIntent);

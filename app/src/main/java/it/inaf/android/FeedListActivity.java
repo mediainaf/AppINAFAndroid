@@ -8,6 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -32,6 +37,10 @@ public class FeedListActivity extends NavigationDrawerActivity
 
     Bundle mArgs;
     ArrayList<RSSItem> mItemList;
+    int mSpinnerCategoryPosition = 0;
+    int mSpinnerCategoryId = 0;
+    int mSpinnerDetailPosition = 0;
+    boolean mLoading = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,102 @@ public class FeedListActivity extends NavigationDrawerActivity
         }
         else {
             addFragment();
+        }
+
+        if(mArgs.getString("feed_type").equals("news")) {
+            mSpinnerCategoryPosition = mArgs.getInt("filter_category_pos", 0);
+            mSpinnerDetailPosition = mArgs.getInt("filter_pos", 0);
+
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
+            getSupportActionBar().setCustomView(R.layout.news_action_bar);
+            Spinner spinner = (Spinner) findViewById(R.id.action_bar_spinner_collection);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(),
+                    R.array.category, android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+            // setup initial spinner position
+            spinner.setSelection(mSpinnerCategoryPosition);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    Spinner spinner = (Spinner) findViewById(R.id.action_bar_spinner_collection_detail);
+
+                    if(i == 0 && mSpinnerCategoryPosition != 0) {
+                        spinner.setVisibility(View.INVISIBLE);
+                        Intent feedListIntent = new Intent(getBaseContext(), FeedListActivity.class);
+                        feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        feedListIntent.putExtra("feed_type", "news");
+                        feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
+                        feedListIntent.putExtra("nav_position", 1);
+                        startActivity(feedListIntent);
+                        overridePendingTransition(0, 0);
+                    }
+                    else if(i == 0) {
+                        mLoading = false;
+                        return;
+                    }
+
+                    int resid;
+                    mSpinnerCategoryPosition = i;
+                    if(!mLoading)
+                        mSpinnerDetailPosition = 0;
+                    switch(i) {
+                        case 1:
+                            resid = R.array.sedi;
+                            mSpinnerCategoryId = R.array.sedi_id;
+                            break;
+                        case 2:
+                            resid = R.array.terra;
+                            mSpinnerCategoryId = R.array.terra_id;
+                            break;
+                        case 3:
+                            resid = R.array.spazio;
+                            mSpinnerCategoryId = R.array.spazio_id;
+                            break;
+                        default:
+                            spinner.setVisibility(View.INVISIBLE);
+                            return;
+                    }
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(),
+                            resid, android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setVisibility(View.VISIBLE);
+                    // setup initial spinner position
+                    spinner.setSelection(mSpinnerDetailPosition);
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            if(i == 0 || mSpinnerDetailPosition == i)
+                                return;
+
+                            mSpinnerDetailPosition = i;
+                            String[] stringArray = getResources().getStringArray(mSpinnerCategoryId);
+                            String tag = stringArray[i];
+                            Intent feedListIntent = new Intent(getBaseContext(), FeedListActivity.class);
+                            feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            feedListIntent.putExtra("feed_type", "news");
+                            feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/tag/"+tag+"/feed");
+                            feedListIntent.putExtra("nav_position", 1);
+                            feedListIntent.putExtra("filter_category_pos", mSpinnerCategoryPosition);
+                            feedListIntent.putExtra("filter_pos", mSpinnerDetailPosition);
+                            startActivity(feedListIntent);
+                            overridePendingTransition(0, 0);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+
+                    mLoading = false;
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
         }
     }
 
@@ -156,6 +261,8 @@ public class FeedListActivity extends NavigationDrawerActivity
         outState.putBundle("args", mArgs);
         if(mItemList != null)
             outState.putSerializable("item_list", mItemList);
+        outState.putInt("filter_category_pos", mSpinnerCategoryPosition);
+        outState.putInt("filter_pos", mSpinnerDetailPosition);
     }
 
     void addFragment() {

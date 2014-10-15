@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category">
+        <item>Tutte</item>
+        <item>Sedi</item>
+        <item>Terra</item>
+        <item>Spazio</item>
+    </string-array>
+
+    <string-array name="sedi">
+        <item>(Seleziona Sede)</item>
+        <item>IASF Bologna</item>
+        <item>IAPS Roma</item>
+        <item>IASF Milano</item>
+        <item>IASF Palermo</item>
+        <item>IRA Bologna</item>
+        <item>Osservatorio di Arcetri (FI)</item>
+        <item>Osservatorio di Bologna</item>
+        <item>Osservatorio di Brera</item>
+        <item>Osservatorio di Cagliari</item>
+        <item>Osservatorio di Capodimonte (NA)</item>
+        <item>Osservatorio di Catania</item>
+        <item>Osservatorio di Padova</item>
+        <item>Osservatorio di Palermo</item>
+        <item>Osservatorio di Roma</item>
+        <item>Osservatorio di Teramo</item>
+        <item>Osservatorio di Torino</item>
+        <item>Osservatorio di Trieste</item>
+    </string-array>
+
+    <string-array name="sedi_id">
+        <item></item>
+        <item>iasf_bologna</item>
+        <item>iaps_roma</item>
+        <item>iasf_milano</item>
+        <item>iasf_palermo</item>
+        <item>ira_bologna</item>
+        <item>oa_arcetri</item>
+        <item>oa_bologna</item>
+        <item>oa_brera</item>
+        <item>oa_cagliari</item>
+        <item>oa_napoli</item>
+        <item>oa_catania</item>
+        <item>oa_padova</item>
+        <item>oa_palermo</item>
+        <item>oa_roma</item>
+        <item>oa_teramo</item>
+        <item>oa_torino</item>
+        <item>oa_trieste</item>
+    </string-array>
+
+    <string-array name="terra">
+        <item>(Seleziona Osservatorio)</item>
+        <item>Antenna di Medicina (BO)</item>
+        <item>Antenna di Noto (SR)</item>
+        <item>Croce del Nord (Medicina - BO)</item>
+        <item>Large Binocular Telescope</item>
+        <item>Magic</item>
+        <item>Rapid Eye Mount</item>
+        <item>Sardinia Radio Telescope</item>
+        <item>Telescopio Nazionale Galileo</item>
+        <item>VLT Survey Telescope</item>
+    </string-array>
+
+    <string-array name="terra_id">
+        <item></item>
+        <item>medicina</item>
+        <item>noto</item>
+        <item>croce-del-nord</item>
+        <item>lbt</item>
+        <item>magic</item>
+        <item>rem</item>
+        <item>srt</item>
+        <item>tng_canarie</item>
+        <item>vst</item>
+    </string-array>
+
+    <string-array name="spazio">
+        <item>(Seleziona Satellite)</item>
+        <item>AGILE</item>
+        <item>BepiColombo</item>
+        <item>Boomerang-B2k</item>
+        <item>Cassini-Huygens</item>
+        <item>Chandra</item>
+        <item>CHEOPS</item>
+        <item>CLUSTER</item>
+        <item>CoRoT</item>
+        <item>DAWN</item>
+        <item>EChO</item>
+        <item>EJSM-Laplace/JUICE</item>
+        <item>ExoMars</item>
+        <item>EUCLID</item>
+        <item>Fermi</item>
+        <item>GAIA</item>
+        <item>GReAT</item>
+        <item>Herschel</item>
+        <item>Hinode</item>
+        <item>INTEGRAL</item>
+        <item>James Webb Space Telescope</item>
+        <item>JEM-EUSO</item>
+        <item>LISA/New Gravitational wave Obse</item>
+        <item>LISA-Pathfinder</item>
+        <item>LOFT</item>
+        <item>MarcoPolo-R</item>
+        <item>Mars Express</item>
+        <item>Mars Reconnaissance Orbiter</item>
+        <item>MIRAX</item>
+        <item>Olimpo</item>
+        <item>Phobos-Soil</item>
+        <item>Planck</item>
+        <item>PLATO</item>
+        <item>Proba-3</item>
+        <item>Rosetta</item>
+        <item>SCORE</item>
+        <item>SOHO</item>
+        <item>Solar Orbiter</item>
+        <item>SPICA</item>
+        <item>STEREO</item>
+        <item>Swift</item>
+        <item>Venus Express</item>
+        <item>XMM-Newton</item>
+    </string-array>
+
+    <string-array name="spazio_id">
+        <item></item>
+        <item>agile</item>
+        <item>bepicolombo</item>
+        <item>boomerang</item>
+        <item>cassini</item>
+        <item>chandra</item>
+        <item>cheops</item>
+        <item>cluster</item>
+        <item>corot</item>
+        <item>dawn</item>
+        <item>echo</item>
+        <item>juice</item>
+        <item>exomars</item>
+        <item>euclid</item>
+        <item>fermi</item>
+        <item>gaia</item>
+        <item>great</item>
+        <item>herschel</item>
+        <item>hinode</item>
+        <item>integral</item>
+        <item>jwst</item>
+        <item>jem-euso</item>
+        <item>lisa</item>
+        <item>lisa-pathfinder</item>
+        <item>loft</item>
+        <item>marcopolo-r</item>
+        <item>mars-express</item>
+        <item>Reconnaissance Orbiter mars-orbiter</item>
+        <item>mirax</item>
+        <item>olimpo</item>
+        <item>phobos-soil</item>
+        <item>planck</item>
+        <item>plato</item>
+        <item>proba-3</item>
+        <item>rosetta</item>
+        <item>score</item>
+        <item>soho</item>
+        <item>solar-orbiter</item>
+        <item>spica</item>
+        <item>stereo</item>
+        <item>swift</item>
+        <item>venus-express</item>
+        <item>xmm</item>
+    </string-array>
+</resources>
