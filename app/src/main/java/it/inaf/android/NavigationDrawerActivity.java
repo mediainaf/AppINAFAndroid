@@ -57,6 +57,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 0: {
                 mTitle = getString(R.string.title_section1);
                 Intent feedListIntent = new Intent(this, HomeActivity.class);
+                feedListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 feedListIntent.putExtra("nav_position", position);
                 startActivity(feedListIntent);
@@ -67,6 +68,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 1: {
                 mTitle = getString(R.string.title_section2);
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
+                feedListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 feedListIntent.putExtra("feed_type", "news");
                 feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
@@ -79,6 +81,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 2: {
                 mTitle = getString(R.string.title_section3);
                 Intent feedListIntent = new Intent(this, FeedListActivity.class);
+                feedListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 feedListIntent.putExtra("feed_type", "events");
                 feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/eventi/feed");
@@ -91,6 +94,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 3: {
                 mTitle = getString(R.string.title_section4);
                 Intent videoGalleryIntent = new Intent(this, VideoGalleryActivity.class);
+                videoGalleryIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 videoGalleryIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 videoGalleryIntent.putExtra("nav_position", position);
                 startActivity(videoGalleryIntent);
@@ -101,6 +105,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 4: {
                 mTitle = getString(R.string.title_section5);
                 Intent appsIntent = new Intent(this, AppsActivity.class);
+                appsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 appsIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 appsIntent.putExtra("nav_position", position);
                 startActivity(appsIntent);
@@ -111,6 +116,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 5: {
                 mTitle = getString(R.string.title_section6);
                 Intent placesIntent = new Intent(this, LocationsActivity.class);
+                placesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 placesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 placesIntent.putExtra("nav_position", position);
                 startActivity(placesIntent);
@@ -121,6 +127,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 6: {
                 mTitle = getString(R.string.title_section7);
                 Intent telescopesIntent = new Intent(this, TelescopeListActivity.class);
+                telescopesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 telescopesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 telescopesIntent.putExtra("nav_position", position);
                 startActivity(telescopesIntent);
@@ -131,6 +138,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 7: {
                 mTitle = getString(R.string.title_section8);
                 Intent satellitesIntent = new Intent(this, SatelliteListActivity.class);
+                satellitesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 satellitesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 satellitesIntent.putExtra("nav_position", position);
                 startActivity(satellitesIntent);
@@ -141,6 +149,7 @@ public class NavigationDrawerActivity extends ActionBarActivity
             case 8: {
                 mTitle = getString(R.string.title_section9);
                 Intent jobsIntent = new Intent(this, JobListActivity.class);
+                jobsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 jobsIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 jobsIntent.putExtra("nav_position", position);
                 startActivity(jobsIntent);
