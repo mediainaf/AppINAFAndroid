@@ -164,9 +164,9 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         ImageView image = (ImageView) findViewById(R.id.splash_image);
 
         // swap image
-        if (INAF.landscape)
-            image.setImageResource(R.drawable.galileo);
-        else
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
             image.setImageResource(R.drawable.galileo_l);
+        else
+            image.setImageResource(R.drawable.galileo);
     }
 }
