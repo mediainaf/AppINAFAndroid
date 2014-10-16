@@ -19,6 +19,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -83,7 +84,6 @@ public class FeedListFragment extends ListFragment {
         mItemList = (ArrayList<RSSItem>) bundle.getSerializable("item_list");
         mFeedUrl = bundle.getString("feed_url");
         mRssAdapter = new RSSListAdapter(getActivity(), R.layout.feed_item, mItemList);
-        setListAdapter(mRssAdapter);
     }
 
     @Override
@@ -92,6 +92,7 @@ public class FeedListFragment extends ListFragment {
         View rootView = inflater
                 .inflate(R.layout.fragment_feed_list, container, false);
         getActivity().setTitle(mTitle);
+        mProgressBar = View.inflate(getActivity(), R.layout.progress_bar, null);
         return rootView;
     }
 
@@ -105,7 +106,8 @@ public class FeedListFragment extends ListFragment {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
         getListView().setOnScrollListener(new EndlessScrollListener());
-        mProgressBar = View.inflate(getActivity(), R.layout.progress_bar, null);
+        getListView().addFooterView(mProgressBar);
+        setListAdapter(mRssAdapter);
     }
     
     @Override
@@ -285,10 +287,12 @@ public class FeedListFragment extends ListFragment {
     }
 
     void startBottomProgressBar(){
-        getListView().addFooterView(mProgressBar);
+        ProgressBar loader = (ProgressBar) getActivity().findViewById(R.id.feed_endlist_loader);
+        loader.setVisibility(View.VISIBLE);
     }
 
     void stopBottomProgressBar(){
-        getListView().removeFooterView(mProgressBar);
+        ProgressBar loader = (ProgressBar) getActivity().findViewById(R.id.feed_endlist_loader);
+        loader.setVisibility(View.INVISIBLE);
     }
 }
