@@ -11,7 +11,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.Display;
-import android.view.Surface;
 import android.view.WindowManager;
 
 import com.android.volley.RequestQueue;
@@ -88,10 +87,13 @@ public class INAF extends Application {
         landscape = (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE);
 
-        if(width > height)
-            aspectRatio = width / (float)height;
-        else
-            aspectRatio = height / (float)width;
+        if(width > height) {
+            int tmp = width;
+            width = height;
+            height = tmp;
+        }
+
+        aspectRatio = height / (float)width;
 
         Log.i("Info", "Width: " + width + " Height: " + height + "Aspect Ratio: " + aspectRatio);
     }

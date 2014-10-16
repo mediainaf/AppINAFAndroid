@@ -4,6 +4,7 @@
 
 package it.inaf.android;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -45,8 +46,13 @@ public class HomeDetailFragment extends Fragment {
         ImageView imgView = (ImageView) layout.findViewById(R.id.home_background);
 
         textView.setText(mDescription);
-        double ratio = 0.7;
-        textView.setWidth((int) (INAF.width * ratio));
+        int width;
+        if(getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE)
+            width = (int) (INAF.height * 0.75);
+        else
+            width = (int) (INAF.width * 0.75);
+        textView.setWidth(width);
 
         imgView.setImageDrawable(INAF.homeBackground);
 
@@ -57,5 +63,18 @@ public class HomeDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("descr", mDescription);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        TextView textView = (TextView) getActivity().findViewById(R.id.home_text);
+        int width;
+        if(getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_LANDSCAPE)
+            width = (int) (INAF.height * 0.7);
+        else
+            width = (int) (INAF.width * 0.7);
+        textView.setWidth(width);
     }
 }
