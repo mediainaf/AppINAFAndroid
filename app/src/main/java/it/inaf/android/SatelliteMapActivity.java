@@ -8,6 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class SatelliteMapActivity extends NavigationDrawerActivity {
     Bundle mArgs;
@@ -15,6 +19,9 @@ public class SatelliteMapActivity extends NavigationDrawerActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!checkPlayServices())
+            return;
 
         mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
 
@@ -49,5 +56,38 @@ public class SatelliteMapActivity extends NavigationDrawerActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("args", mArgs);
+    }
+
+    private boolean checkPlayServices() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (status != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+                GooglePlayServicesUtil.getErrorDialog(status, this,
+                        INAF.REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
+            } else {
+                Toast.makeText(this, "This device is not supported.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case INAF.REQUEST_CODE_RECOVER_PLAY_SERVICES:
+                int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+                if (status != ConnectionResult.SUCCESS) {
+                    Toast.makeText(this, "Google Play Services must be installed.",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+        }
+
+        // TODO restart the activity
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

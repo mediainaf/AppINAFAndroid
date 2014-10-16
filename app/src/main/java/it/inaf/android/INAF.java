@@ -58,6 +58,8 @@ public class INAF extends Application {
     public static String satelliteDetailPrefixUrl = "http://www.media.inaf.it/tag/";
     public static JSONArray jsonSatellites;
 
+    static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
+
     @Override
     public void onCreate() {
         super.onCreate();
