@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -27,17 +26,7 @@ import java.util.HashMap;
 
 public class LocationsFragment extends Fragment {
 
-    private class LocationInfo
-    {
-        String name;
-        String descr;
-        String website;
-        String address;
-        String phone;
-        String coordinates;
-    }
-
-    LocationInfo[] mLocations;
+    LocationItem[] mLocations;
     HashMap<String, Integer> idToLocationInfoIndex;
 
     @Override
@@ -46,13 +35,13 @@ public class LocationsFragment extends Fragment {
 
         int length = INAF.jsonLocations.length();
 
-        mLocations = new LocationInfo[length];
+        mLocations = new LocationItem[length];
         idToLocationInfoIndex = new HashMap<String, Integer>();
 
         for(int i=0; i< length; i++) {
             try {
                 JSONObject obj = INAF.jsonLocations.getJSONObject(i);
-                mLocations[i] = new LocationInfo();
+                mLocations[i] = new LocationItem();
                 mLocations[i].name = obj.getString("name");
                 mLocations[i].descr = obj.getString("descr");
                 mLocations[i].website = obj.getString("website");
@@ -91,19 +80,12 @@ public class LocationsFragment extends Fragment {
             TextView addressView = (TextView) layout.findViewById(R.id.location_info_address);
             TextView websiteView = (TextView) layout.findViewById(R.id.location_info_website);
 
-            final LocationInfo mLocation = mLocations[idToLocationInfoIndex.get(marker.getId())];
+            final LocationItem mLocation = mLocations[idToLocationInfoIndex.get(marker.getId())];
             titleView.setText(mLocation.name);
             addressView.setText(mLocation.address);
             phoneView.setText("Telefono: "+mLocation.phone);
             websiteView.setText(mLocation.website);
-/*            phoneView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:"+mLocation.phone));
-                    startActivity(callIntent);
-                }
-            });*/
+
             return layout;
         }
     }
@@ -116,6 +98,18 @@ public class LocationsFragment extends Fragment {
         // center on Italy
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.2924601, 12.5736108), 5));
         map.setInfoWindowAdapter(new LocationWindowAdapter());
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                LocationItem location = mLocations[idToLocationInfoIndex.get(marker.getId())];
+
+                LocationDialogFragment dialog = new LocationDialogFragment();
+                Bundle args = new Bundle();
+                args.putSerializable("item", location);
+                dialog.setArguments(args);
+                dialog.show(getActivity().getSupportFragmentManager(), "blablabla");
+            }
+        });
 
         for(int i=0; i<mLocations.length; i++) {
             String coordinateArray[] = mLocations[i].coordinates.split(",");
