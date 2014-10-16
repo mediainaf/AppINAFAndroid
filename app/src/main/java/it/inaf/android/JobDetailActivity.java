@@ -59,13 +59,13 @@ public class JobDetailActivity extends NavigationDrawerActivity
     }
 
     @Override
-    public void onResponse(String string) {
+    public void onResponse(String string, String url) {
         mArgs.putString("webpage", string);
         addFragment();
     }
 
     @Override
-    public void onError(VolleyError error) {
+    public void onError(VolleyError error, String url) {
 
     }
 

@@ -23,8 +23,8 @@ import java.io.UnsupportedEncodingException;
 public class StringRequestFragment extends Fragment {
 
     static interface Callbacks {
-        void onResponse(String xmlString);
-        void onError(VolleyError error);
+        void onResponse(String xmlString, String url);
+        void onError(VolleyError error, String url);
     }
 
     private static final boolean DEBUG = true;
@@ -120,26 +120,36 @@ public class StringRequestFragment extends Fragment {
     }
 
     private class ResponseListener implements Response.Listener<String> {
+        private String mUrl;
+
+        ResponseListener(String url) {
+            mUrl = url;
+        }
 
         @Override
         public void onResponse(String response) {
             if(mCallbacks != null)
-                mCallbacks.onResponse(response);
+                mCallbacks.onResponse(response, mUrl);
             mRunning = false;
         }
     }
 
     private class ErrorListener implements Response.ErrorListener {
+        private String mUrl;
+
+        ErrorListener(String url) {
+            mUrl = url;
+        }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            mCallbacks.onError(error);
+            mCallbacks.onError(error, mUrl);
             mRunning = false;
         }
     }
 
     public void start(int method, String url) {
-        StringUTF8Request request = new StringUTF8Request(method, url, new ResponseListener(), new ErrorListener());
+        StringUTF8Request request = new StringUTF8Request(method, url, new ResponseListener(url), new ErrorListener(url));
         INAF.requestQueue.add(request);
         mRunning = true;
     }

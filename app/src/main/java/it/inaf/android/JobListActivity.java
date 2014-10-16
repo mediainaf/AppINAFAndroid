@@ -61,7 +61,7 @@ public class JobListActivity extends NavigationDrawerActivity
     }
 
     @Override
-    public void onResponse(String xmlString) {
+    public void onResponse(String xmlString, String url) {
         ArrayList<JobItem> itemList = new ArrayList<JobItem>();
 
         // parse xml
@@ -114,7 +114,7 @@ public class JobListActivity extends NavigationDrawerActivity
     }
 
     @Override
-    public void onError(VolleyError error) {
+    public void onError(VolleyError error, String url) {
 
     }
 

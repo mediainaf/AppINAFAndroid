@@ -38,6 +38,7 @@
 
         <activity
             android:name=".FeedListActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:label="@string/title_feed_list">
         </activity>
 

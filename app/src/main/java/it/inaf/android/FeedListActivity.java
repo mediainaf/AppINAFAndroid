@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -41,6 +40,7 @@ public class FeedListActivity extends NavigationDrawerActivity
     int mSpinnerCategoryId = 0;
     int mSpinnerDetailPosition = 0;
     boolean mLoading = true;
+    FeedListFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,8 +168,14 @@ public class FeedListActivity extends NavigationDrawerActivity
     }
 
     @Override
-    public void onResponse(String xmlString) {
-        mItemList = new ArrayList<RSSItem>();
+    public void onResponse(String xmlString, String url) {
+        boolean paged = false;
+        if(url.contains("?paged")) {
+            paged = true;
+        }
+        else {
+            mItemList = new ArrayList<RSSItem>();
+        }
 
         // parse xml
         try {
@@ -198,21 +204,31 @@ public class FeedListActivity extends NavigationDrawerActivity
                 // find the image url inside the description
                 Pattern p = Pattern.compile(".*<img[^>]*src=\"([^\"]*)", Pattern.CASE_INSENSITIVE);
                 Matcher m = p.matcher(descriptionCDATA);
-                m.find();
-                rssItem.imageUrl = m.group(1);
+                boolean found = m.find();
+                if(found)
+                    rssItem.imageUrl = m.group(1);
                 Element contentElement = item.getChild("encoded", Namespace.getNamespace("http://purl.org/rss/1.0/modules/content/"));
                 String contentCDATA = contentElement.getText();
                 rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
 
-                mItemList.add(rssItem);
+                if(paged)
+                    mFragment.addItem(rssItem);
+                else
+                    mItemList.add(rssItem);
             }
+
+            if(paged)
+                mFragment.stopBottomProgressBar();
+
         } catch (JDOMException e1) {
             e1.printStackTrace();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
 
-        addFragment();
+        if(!paged) {
+            addFragment();
+        }
 
 /*        if (findViewById(R.id.item_detail_container) != null) { TODO handle two-panel
             // The detail container view will be present only in the
@@ -230,7 +246,7 @@ public class FeedListActivity extends NavigationDrawerActivity
     }
 
     @Override
-    public void onError(VolleyError error) {
+    public void onError(VolleyError error, String url) {
         Log.e("aaa", "TODO Handle Error!!!!!!!");
         Log.e("aaa", error.getMessage());
     }
@@ -269,11 +285,12 @@ public class FeedListActivity extends NavigationDrawerActivity
         Bundle args = new Bundle();
         args.putString("title", mTitle);
         args.putSerializable("item_list", mItemList);
-        FeedListFragment fragment = new FeedListFragment();
-        fragment.setArguments(args);
+        args.putString("feed_url", mArgs.getString("feed_url"));
+        mFragment = new FeedListFragment();
+        mFragment.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
-                .add(R.id.container, fragment, "fragment_container").commit();
+                .add(R.id.container, mFragment, "fragment_container").commit();
         stopLoading();
     }
 }

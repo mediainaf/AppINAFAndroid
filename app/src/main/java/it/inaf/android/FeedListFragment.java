@@ -9,23 +9,29 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+
 import java.util.ArrayList;
 
-public class FeedListFragment extends ListFragment
-{
+public class FeedListFragment extends ListFragment {
+
     private String mTitle;
     private ArrayList<RSSItem> mItemList = null;
+    private String mFeedUrl;
     private RSSListAdapter mRssAdapter = null;
+    private View mProgressBar;
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
     private int mActivatedPosition = ListView.INVALID_POSITION;
@@ -67,14 +73,15 @@ public class FeedListFragment extends ListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle args;
+        Bundle bundle;
         if(savedInstanceState != null)
-            args = savedInstanceState;
+            bundle = savedInstanceState;
         else
-            args = getArguments();
+            bundle = getArguments();
 
-        mTitle = args.getString("title");
-        mItemList = (ArrayList<RSSItem>) args.getSerializable("item_list");
+        mTitle = bundle.getString("title");
+        mItemList = (ArrayList<RSSItem>) bundle.getSerializable("item_list");
+        mFeedUrl = bundle.getString("feed_url");
         mRssAdapter = new RSSListAdapter(getActivity(), R.layout.feed_item, mItemList);
         setListAdapter(mRssAdapter);
     }
@@ -97,6 +104,8 @@ public class FeedListFragment extends ListFragment
                 && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
             setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
         }
+        getListView().setOnScrollListener(new EndlessScrollListener());
+        mProgressBar = View.inflate(getActivity(), R.layout.progress_bar, null);
     }
     
     @Override
@@ -123,6 +132,7 @@ public class FeedListFragment extends ListFragment
 
         outState.putString("title", mTitle);
         outState.putSerializable("item_list", mItemList);
+        outState.putString("feed_url", mFeedUrl);
 
         if (mActivatedPosition != ListView.INVALID_POSITION) {
             // Serialize and persist the activated item position.
@@ -221,9 +231,11 @@ public class FeedListFragment extends ListFragment
             int descNLines = (int) (heightDescription * 1.0 / holder.description.getLineHeight());
             holder.description.setLines(descNLines);
 
-            holder.image.setTag(data.imageUrl);
-            holder.image.setImageResource(R.drawable.empty);
-            INAF.imageLoader.get(data.imageUrl, new ImageListener(holder.image));
+            if(data.imageUrl != null && !data.imageUrl.equals("")) {
+                holder.image.setTag(data.imageUrl);
+                holder.image.setImageResource(R.drawable.empty);
+                INAF.imageLoader.get(data.imageUrl, new ImageListener(holder.image));
+            }
 
             return convertView;
         }
@@ -237,5 +249,46 @@ public class FeedListFragment extends ListFragment
         }
 
         mActivatedPosition = position;
+    }
+
+    private class EndlessScrollListener implements AbsListView.OnScrollListener {
+        private static final int pageSize = 14;
+        private int pageNum = 1;
+        private int lastItem = pageNum * pageSize;
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem,
+                int visibleItemCount, int totalItemCount) {
+
+            if (visibleItemCount > 0) {
+                int lastVisibleItem = firstVisibleItem + visibleItemCount;
+
+                if (lastVisibleItem >= lastItem) {
+                    pageNum++;
+                    lastItem = pageNum * pageSize;
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    StringRequestFragment request = new StringRequestFragment();
+                    fm.beginTransaction().add(request, "feed_list_old_request").commit();
+                    request.start(Request.Method.GET, mFeedUrl+"?paged="+String.valueOf(pageNum));
+                    startBottomProgressBar();
+                }
+            }
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
+    }
+
+    void addItem(RSSItem item) {
+        mRssAdapter.add(item);
+    }
+
+    void startBottomProgressBar(){
+        getListView().addFooterView(mProgressBar);
+    }
+
+    void stopBottomProgressBar(){
+        getListView().removeFooterView(mProgressBar);
     }
 }
