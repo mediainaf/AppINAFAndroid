@@ -20,4 +20,5 @@
     <string name="image_description">Image</string>
     <string name="action_open_map">Map</string>
     <string name="action_open_webcam">Webcams</string>
+    <string name="action_open_credits">Credits</string>
 </resources>

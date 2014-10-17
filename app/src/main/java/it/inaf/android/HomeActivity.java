@@ -5,6 +5,13 @@
 package it.inaf.android;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HomeActivity extends NavigationDrawerActivity {
     Bundle mArgs = null;
@@ -29,5 +36,35 @@ public class HomeActivity extends NavigationDrawerActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("args", mArgs);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_open_credits:
+                CreditsDialogFragment dialog = new CreditsDialogFragment();
+                Bundle args = new Bundle();
+                JSONArray json = INAF.loadJson(this, "json_about");
+                String text = "";
+                try {
+                    JSONObject obj = json.getJSONObject(0);
+                    text = obj.getString("credits");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                args.putString("text", text);
+                dialog.setArguments(args);
+                dialog.show(getSupportFragmentManager(), "blablabla");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
