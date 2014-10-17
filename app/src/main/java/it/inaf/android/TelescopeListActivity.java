@@ -33,7 +33,7 @@ public class TelescopeListActivity extends NavigationDrawerActivity
             mArgs = getIntent().getExtras();
             mItemList = new ArrayList<TelescopeItem>();
 
-            JSONArray json = INAF.loadJson(this, "json_locations");
+            JSONArray json = INAF.loadJson(this, "json_telescopes");
 
             int length = json.length();
 

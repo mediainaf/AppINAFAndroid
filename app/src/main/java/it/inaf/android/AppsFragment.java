@@ -126,7 +126,7 @@ public class AppsFragment extends ListFragment {
         else {
             mItemList = new ArrayList<AppItem>();
 
-            JSONArray json = INAF.loadJson(getActivity(), "json_about");
+            JSONArray json = INAF.loadJson(getActivity(), "json_apps");
 
             int length = json.length();
 
