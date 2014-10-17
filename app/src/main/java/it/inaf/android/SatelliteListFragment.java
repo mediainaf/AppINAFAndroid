@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -160,11 +161,13 @@ public class SatelliteListFragment extends ListFragment {
             mItemList = (ArrayList<SatelliteItem>) savedInstanceState.getSerializable("item_list");
         }
         else {
+            JSONArray json = INAF.loadJson(getActivity(), "json_satellites");
+
             mItemList = new ArrayList<SatelliteItem>();
-            int length = INAF.jsonSatellites.length();
+            int length = json.length();
             for (int i = 0; i < length; i++) {
                 try {
-                    JSONObject obj = INAF.jsonSatellites.getJSONObject(i);
+                    JSONObject obj = json.getJSONObject(i);
 
                     boolean show = obj.getString("showonapp").equals("1");
                     if (!show)

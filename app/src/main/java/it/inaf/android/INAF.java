@@ -4,10 +4,12 @@
 
 package it.inaf.android;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.Display;
@@ -21,7 +23,7 @@ import com.android.volley.toolbox.Volley;
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.JSONException;
 
 @ReportsCrashes(
         formKey = "",
@@ -41,22 +43,15 @@ public class INAF extends Application {
     public static boolean landscape;
 
     public static String aboutUrl = "http://app.media.inaf.it/GetAbout.php";
-    public static JSONArray jsonAbout;
     public static String homeImageUrl = "http://app.media.inaf.it/GetSplashImage.php";
-    public static JSONObject jsonHomeImage;
-    public static BitmapDrawable homeBackground;
     public static String locationsUrl = "http://app.media.inaf.it/GetLocations.php";
-    public static JSONArray jsonLocations;
     public static String appsUrl = "http://app.media.inaf.it/GetApps.php";
-    public static JSONArray jsonApps;
     public static String telescopesUrl = "http://app.media.inaf.it/GetTelescopes.php";
     public static String telescopeImagePrefixUrl = "http://www.media.inaf.it/wp-content/themes/mediainaf/images/tags/";
     public static String telescopeDetailPrefixUrl = "http://www.media.inaf.it/tag/";
-    public static JSONArray jsonTelescopes;
     public static String satellitesUrl = "http://app.media.inaf.it/GetSatellites.php";
     public static String satelliteImagePrefixUrl = "http://www.media.inaf.it/wp-content/themes/mediainaf/images/tags/";
     public static String satelliteDetailPrefixUrl = "http://www.media.inaf.it/tag/";
-    public static JSONArray jsonSatellites;
 
     static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 
@@ -119,5 +114,27 @@ public class INAF extends Application {
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    public static JSONArray loadJson(Activity activity, String name) {
+        SharedPreferences settings = activity.getSharedPreferences("global_data", 0);
+        String str = settings.getString(name, null);
+        if(str == null) return null;
+
+        JSONArray json = null;
+        try {
+            json = new JSONArray(str);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }

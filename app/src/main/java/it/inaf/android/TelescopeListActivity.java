@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,11 +33,13 @@ public class TelescopeListActivity extends NavigationDrawerActivity
             mArgs = getIntent().getExtras();
             mItemList = new ArrayList<TelescopeItem>();
 
-            int length = INAF.jsonTelescopes.length();
+            JSONArray json = INAF.loadJson(this, "json_locations");
+
+            int length = json.length();
 
             for (int i = 0; i < length; i++) {
                 try {
-                    JSONObject obj = INAF.jsonTelescopes.getJSONObject(i);
+                    JSONObject obj = json.getJSONObject(i);
 
                     boolean show = obj.getString("showonapp").equals("1");
                     if (!show)

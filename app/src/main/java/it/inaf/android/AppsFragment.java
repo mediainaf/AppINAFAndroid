@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -125,12 +126,14 @@ public class AppsFragment extends ListFragment {
         else {
             mItemList = new ArrayList<AppItem>();
 
-            int length = INAF.jsonApps.length();
+            JSONArray json = INAF.loadJson(getActivity(), "json_about");
+
+            int length = json.length();
 
             for (int i = 0; i < length; i++) {
                 try {
                     AppItem appItem = new AppItem();
-                    JSONObject obj = INAF.jsonApps.getJSONObject(i);
+                    JSONObject obj = json.getJSONObject(i);
                     appItem.id = obj.getString("id");
                     appItem.name = obj.getString("name");
                     appItem.descr = obj.getString("descr");

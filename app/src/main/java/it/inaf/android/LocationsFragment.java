@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,14 +34,16 @@ public class LocationsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int length = INAF.jsonLocations.length();
+        JSONArray json = INAF.loadJson(getActivity(), "json_locations");
+
+        int length = json.length();
 
         mLocations = new LocationItem[length];
         idToLocationInfoIndex = new HashMap<String, Integer>();
 
         for(int i=0; i< length; i++) {
             try {
-                JSONObject obj = INAF.jsonLocations.getJSONObject(i);
+                JSONObject obj = json.getJSONObject(i);
                 mLocations[i] = new LocationItem();
                 mLocations[i].name = obj.getString("name");
                 mLocations[i].descr = obj.getString("descr");
