@@ -19,7 +19,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDKDoGBwzhZOYZiRiV8TzNq2Uo_prepybQ"/>
+            android:value="INSERT_API_KEY"/>
 
         <activity
             android:name=".SplashActivity"
