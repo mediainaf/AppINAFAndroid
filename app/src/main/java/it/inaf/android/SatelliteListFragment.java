@@ -55,7 +55,8 @@ public class SatelliteListFragment extends ListFragment {
         public void onErrorResponse(VolleyError error) {
             super.onErrorResponse(error);
 
-            if (error.networkResponse.statusCode == 404) {
+            if(error.networkResponse != null &&
+                error.networkResponse.statusCode == 404) {
                 mNoImageSet.add(mUrl);
 
                 if (!mImage.getTag().toString().equals(mUrl))

@@ -7,8 +7,7 @@ package it.inaf.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
@@ -103,7 +102,7 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
 
     @Override
     public void onError(VolleyError error) {
-        Log.e("Error", "Error on loading video feed");
+        Toast.makeText(this, "Connessione lenta o assente. Controllare le impostazioni di connessione e ritentare.", Toast.LENGTH_LONG).show();
     }
 
     @Override

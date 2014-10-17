@@ -29,6 +29,5 @@ public class ImageListener implements ImageLoader.ImageListener
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        // TODO handle volley errors
     }
 }

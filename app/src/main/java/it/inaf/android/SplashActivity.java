@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -146,7 +147,6 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    // TODO handle volley errors
                 }
             });
         }
@@ -154,8 +154,7 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
 
     @Override
     public void onError(VolleyError error) {
-        Log.i("unhandled errors", "volley error: " + error.toString());
-        // TODO handle error!
+        Toast.makeText(this, "Connessione lenta o assente. Controllare le impostazioni di connessione e ritentare.", Toast.LENGTH_LONG).show();
     }
 
     void checkStart()

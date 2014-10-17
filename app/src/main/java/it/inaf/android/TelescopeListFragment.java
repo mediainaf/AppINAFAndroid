@@ -15,11 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,6 +61,8 @@ public class TelescopeListFragment extends ListFragment {
                 int padding = (int) getResources().getDimension(R.dimen.telescope_padding);
                 mImage.setPadding(padding, padding, padding, padding);
             }
+            else
+                Toast.makeText(getActivity(), "Connessione lenta o assente. Controllare le impostazioni di connessione e ritentare.", Toast.LENGTH_LONG).show();
         }
     }
 

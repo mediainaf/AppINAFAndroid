@@ -7,11 +7,11 @@ package it.inaf.android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -247,8 +247,7 @@ public class FeedListActivity extends NavigationDrawerActivity
 
     @Override
     public void onError(VolleyError error, String url) {
-        Log.e("aaa", "TODO Handle Error!!!!!!!");
-        Log.e("aaa", error.getMessage());
+        Toast.makeText(this, "Connessione lenta o assente. Controllare le impostazioni di connessione e ritentare.", Toast.LENGTH_LONG).show();
     }
 
     @Override
