@@ -163,17 +163,6 @@ public class SplashActivity extends FragmentActivity implements JSONRequestFragm
         Log.d("SplashActivity::onResponseArray()", "counter increased to " + responseCounter);
 
         if(responseCounter == 6) {
-/*            try {
-                FileOutputStream fos = openFileOutput("home_background.bmp", Context.MODE_PRIVATE);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                mHomeBackground.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                fos.write(stream.toByteArray());
-                fos.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
 
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
