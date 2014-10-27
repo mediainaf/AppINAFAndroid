@@ -156,6 +156,17 @@ public class NavigationDrawerActivity extends ActionBarActivity
                 overridePendingTransition(0, 0);
                 break;
             }
+            case 9: {
+                mTitle = getString(R.string.title_section10);
+                Intent shareTweetIntent = new Intent(this, ShareTweetActivity.class);
+                shareTweetIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                shareTweetIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                shareTweetIntent.putExtra("nav_position", position);
+                startActivity(shareTweetIntent);
+                finish();
+                overridePendingTransition(0, 0);
+                break;
+            }
         }
     }
 

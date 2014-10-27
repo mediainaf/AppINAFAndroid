@@ -22,6 +22,8 @@ import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
 import org.jdom2.filter.Filters;
 import org.jdom2.input.SAXBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.xml.sax.InputSource;
 
 import java.io.IOException;
@@ -61,10 +63,21 @@ public class FeedListActivity extends NavigationDrawerActivity
         // if there is no request ongoing and no previous request results
         if(request == null && mItemList == null)
         {
-            request = new StringRequestFragment();
-            fm.beginTransaction().add(request, "feed_list_request").commit();
-            request.start(Request.Method.GET, mArgs.getString("feed_url"));
-            startLoading();
+            JSONArray jsonAbout = INAF.loadJson(this, "json_about");
+            String tweeturl = null;
+            try {
+                tweeturl = jsonAbout.getJSONObject(0).getString("tweventurl");
+            } catch (JSONException e) {
+            }
+            if(tweeturl != null) {
+                request = new StringRequestFragment();
+                fm.beginTransaction().add(request, "feed_list_request").commit();
+                request.start(Request.Method.GET, mArgs.getString("feed_url"));
+                startLoading();
+            }
+            else {
+                // TODO handle not existing tweet
+            }
         }
         else {
             addFragment();

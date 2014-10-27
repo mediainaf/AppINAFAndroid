@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+
     <application
         android:name="INAF"
         android:allowBackup="true"
@@ -160,6 +163,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".JobListActivity" />
         </activity>
+
+        <activity
+            android:name=".ShareTweetActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:label="@string/title_section10" >
+        </activity>
+
 
     </application>
 
