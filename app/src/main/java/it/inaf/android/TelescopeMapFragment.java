@@ -5,7 +5,6 @@
 package it.inaf.android;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -75,8 +73,26 @@ public class TelescopeMapFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        GoogleMap map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        final GoogleMap map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setInfoWindowAdapter(new WindowAdapter());
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                LatLng position = marker.getPosition();
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(position.latitude, position.longitude), 18), 5000, new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+
+                return true;
+            }
+        });
         for (int i = 0; i < mItemList.size(); i++) {
             TelescopeItem item = mItemList.get(i);
             MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(item.latitude, item.longitude));
