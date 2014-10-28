@@ -35,7 +35,7 @@ public class INAF extends Application {
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
-    private static BitmapLruCache mBitmapCache;
+    public static BitmapLruCache mBitmapCache;
 
     public static int width;
     public static int height;

@@ -7,6 +7,7 @@ package it.inaf.android;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ public class WebcamFragment extends Fragment {
     int mWebcamSize = 0;
     int mWebcamSpacing = 0;
     GridView mGridView;
+    final Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,15 @@ public class WebcamFragment extends Fragment {
         mItemList = (ArrayList<WebcamItem>) args.getSerializable("item_list");
 
         mWebcamAdapter = new WebcamAdapter(getActivity(), R.layout.webcam_item, mItemList);
+
+        // update images every minute
+        handler.postDelayed( new Runnable() {
+            @Override
+            public void run() {
+                mWebcamAdapter.notifyDataSetChanged();
+                handler.postDelayed( this, 60 * 1000 );
+            }
+        }, 60 * 1000 );
     }
 
     @Override
@@ -170,6 +181,8 @@ public class WebcamFragment extends Fragment {
             holder.webcam.setImageResource(R.drawable.empty);
             holder.title.setText(item.title);
 
+            // remove picture from the cache if present
+            INAF.mBitmapCache.remove("#W0#H0"+item.imageUrl);
             INAF.imageLoader.get(item.imageUrl, new ImageListener(holder.webcam));
 
             return convertView;
