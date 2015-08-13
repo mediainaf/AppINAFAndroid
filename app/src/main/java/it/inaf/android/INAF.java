@@ -55,6 +55,9 @@ public class INAF extends Application {
 
     static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 
+    public static String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+    public static String REGISTRATION_COMPLETE = "registrationComplete";
+
     @Override
     public void onCreate() {
         super.onCreate();

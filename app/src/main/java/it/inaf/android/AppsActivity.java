@@ -30,9 +30,10 @@ public class AppsActivity extends NavigationDrawerActivity
 
     @Override
     public void onItemSelected(Bundle args) {
-        Intent detailIntent = new Intent(this, AppDetailActivity.class);
-        detailIntent.putExtras(args);
-        startActivity(detailIntent);
+        Intent intent = new Intent(this, AppDetailActivity.class);
+        intent.putExtras(args);
+        intent.putExtra("top_activity", false);
+        startActivity(intent);
         overridePendingTransition(0, 0);
     }
 

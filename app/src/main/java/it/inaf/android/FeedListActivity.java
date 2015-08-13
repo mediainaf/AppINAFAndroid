@@ -103,12 +103,13 @@ public class FeedListActivity extends NavigationDrawerActivity
 
                     if(i == 0 && mSpinnerCategoryPosition != 0) {
                         spinner.setVisibility(View.INVISIBLE);
-                        Intent feedListIntent = new Intent(getBaseContext(), FeedListActivity.class);
-                        feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        feedListIntent.putExtra("feed_type", "news");
-                        feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
-                        feedListIntent.putExtra("nav_position", 1);
-                        startActivity(feedListIntent);
+                        Intent intent = new Intent(getBaseContext(), FeedListActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        intent.putExtra("feed_type", "news");
+                        intent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
+                        intent.putExtra("nav_position", R.id.drawer_section_2);
+                        intent.putExtra("top_activity", true);
+                        startActivity(intent);
                         overridePendingTransition(0, 0);
                     }
                     else if(i == 0) {
@@ -152,14 +153,15 @@ public class FeedListActivity extends NavigationDrawerActivity
                             mSpinnerDetailPosition = i;
                             String[] stringArray = getResources().getStringArray(mSpinnerCategoryId);
                             String tag = stringArray[i];
-                            Intent feedListIntent = new Intent(getBaseContext(), FeedListActivity.class);
-                            feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            feedListIntent.putExtra("feed_type", "news");
-                            feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/tag/"+tag+"/feed");
-                            feedListIntent.putExtra("nav_position", 1);
-                            feedListIntent.putExtra("filter_category_pos", mSpinnerCategoryPosition);
-                            feedListIntent.putExtra("filter_pos", mSpinnerDetailPosition);
-                            startActivity(feedListIntent);
+                            Intent intent = new Intent(getBaseContext(), FeedListActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            intent.putExtra("feed_type", "news");
+                            intent.putExtra("feed_url", "http://www.media.inaf.it/tag/"+tag+"/feed");
+                            intent.putExtra("nav_position", R.id.drawer_section_2);
+                            intent.putExtra("filter_category_pos", mSpinnerCategoryPosition);
+                            intent.putExtra("filter_pos", mSpinnerDetailPosition);
+                            intent.putExtra("top_activity", true);
+                            startActivity(intent);
                             overridePendingTransition(0, 0);
                         }
 
@@ -277,9 +279,10 @@ public class FeedListActivity extends NavigationDrawerActivity
                     .add(R.id.item_detail_container, fragment)
                     .commit();
         }*/
-        Intent detailIntent = new Intent(this, FeedDetailActivity.class);
-        detailIntent.putExtras(args);
-        startActivity(detailIntent);
+        Intent intent = new Intent(this, FeedDetailActivity.class);
+        intent.putExtras(args);
+        intent.putExtra("top_activity", false);
+        startActivity(intent);
         overridePendingTransition(0, 0);
     }
 

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_open_credits"
-        android:icon="@drawable/info"
+        android:icon="@drawable/ic_bar_info"
         android:title="@string/action_open_credits"
         app:showAsAction="ifRoom"/>
 </menu>

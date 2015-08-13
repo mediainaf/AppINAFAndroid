@@ -119,9 +119,10 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
                     .add(R.id.item_detail_container, fragment)
                     .commit();
         }*/
-        Intent detailIntent = new Intent(this, VideoDetailActivity.class);
-        detailIntent.putExtras(args);
-        startActivity(detailIntent);
+        Intent intent = new Intent(this, VideoDetailActivity.class);
+        intent.putExtras(args);
+        intent.putExtra("top_activity", false);
+        startActivity(intent);
         overridePendingTransition(0, 0);
     }
 

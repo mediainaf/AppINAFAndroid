@@ -33,9 +33,10 @@ public class SatelliteListActivity extends NavigationDrawerActivity
 
     @Override
     public void onItemSelected(Bundle args) {
-        Intent detailIntent = new Intent(this, SatelliteDetailActivity.class);
-        detailIntent.putExtras(args);
-        startActivity(detailIntent);
+        Intent intent = new Intent(this, SatelliteDetailActivity.class);
+        intent.putExtras(args);
+        intent.putExtra("top_activity", false);
+        startActivity(intent);
         overridePendingTransition(0, 0);
     }
 
@@ -50,9 +51,9 @@ public class SatelliteListActivity extends NavigationDrawerActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_open_map:
-                Intent mapIntent = new Intent(this, SatelliteMapActivity.class);
-                mapIntent.putExtras(mArgs);
-                startActivity(mapIntent);
+                Intent intent = new Intent(this, SatelliteMapActivity.class);
+                intent.putExtra("top_activity", false);
+                startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;
             default:

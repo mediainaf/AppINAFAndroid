@@ -4,195 +4,214 @@
 
 package it.inaf.android;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-public class NavigationDrawerActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.Callbacks {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
-    protected NavigationDrawerFragment mNavigationDrawerFragment;
+public class NavigationDrawerActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener {
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     protected String mTitle;
-    protected int mPosition = 0;
+    protected boolean mGoogleServicesAvailable;
+    protected int mItemId;
+    protected boolean mTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_navigation_drawer);
-
-        FragmentManager fm = getSupportFragmentManager();
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                fm.findFragmentById(R.id.navigation_drawer);
-
         if(savedInstanceState != null) {
-            mPosition = savedInstanceState.getInt("nav_position");
+            mGoogleServicesAvailable = savedInstanceState.getBoolean("google_services");
+            mItemId = savedInstanceState.getInt("nav_position");
+            mTop = savedInstanceState.getBoolean("top_activity");
         }
         else {
+            mGoogleServicesAvailable = checkPlayServices();
             Bundle extras = getIntent().getExtras();
-            if(extras != null)
-                mPosition = extras.getInt("nav_position");
+            if (extras != null) {
+                mItemId = extras.getInt("nav_position");
+                mTop = extras.getBoolean("top_activity");
+            }
+            else {
+                mItemId = R.id.drawer_section_1;
+                mTop = true;
+            }
         }
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout), mPosition);
+        // inflate the the navigation drawer or not based on top/detail activity
+        if(mTop)
+            setContentView(R.layout.activity_navigation_drawer);
+        else
+            setContentView(R.layout.activity_detail);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+
+        // set the navigation drawer only if this is a top activity
+        if(mTop) {
+            DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0) {
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                }
+            };
+            drawerLayout.setDrawerListener(actionBarDrawerToggle);
+            actionBarDrawerToggle.syncState();
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+            navigationView.setNavigationItemSelectedListener(this);
+            navigationView.getMenu().findItem(mItemId).setChecked(true);
+
+        }
+
+
+        if(mGoogleServicesAvailable) {
+            // TODO handle push registration fail
+            /*mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    Toast.makeText(getApplicationContext(), "Registered!", Toast.LENGTH_LONG).show();
+                    SharedPreferences sharedPreferences =
+                            PreferenceManager.getDefaultSharedPreferences(context);
+                    boolean sentToken = sharedPreferences
+                            .getBoolean(INAF.SENT_TOKEN_TO_SERVER, false);
+                    if (sentToken) {
+                        Toast.makeText(getApplicationContext(), "All ok!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            };*/
+
+            Intent intent = new Intent(this, PushRegistrationIntentService.class);
+            startService(intent);
+        }
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        mPosition = position;
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(INAF.REGISTRATION_COMPLETE));
+    }
 
-        switch (position) {
-            case 0: {
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        mItemId = menuItem.getItemId();
+        menuItem.setChecked(true);
+
+        Intent intent = null;
+        switch (mItemId) {
+            case R.id.drawer_section_1: {
                 mTitle = getString(R.string.title_section1);
-                Intent feedListIntent = new Intent(this, HomeActivity.class);
-                feedListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                feedListIntent.putExtra("nav_position", position);
-                startActivity(feedListIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, HomeActivity.class);
                 break;
             }
-            case 1: {
+            case R.id.drawer_section_2: {
                 mTitle = getString(R.string.title_section2);
-                Intent feedListIntent = new Intent(this, FeedListActivity.class);
-                feedListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                feedListIntent.putExtra("feed_type", "news");
-                feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
-                feedListIntent.putExtra("nav_position", position);
-                startActivity(feedListIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, FeedListActivity.class);
+                intent.putExtra("feed_type", "news");
+                intent.putExtra("feed_url", "http://www.media.inaf.it/category/news/feed");
                 break;
             }
-            case 2: {
+            case R.id.drawer_section_3: {
                 mTitle = getString(R.string.title_section3);
-                Intent feedListIntent = new Intent(this, FeedListActivity.class);
-                feedListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                feedListIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                feedListIntent.putExtra("feed_type", "events");
-                feedListIntent.putExtra("feed_url", "http://www.media.inaf.it/category/eventi/feed");
-                feedListIntent.putExtra("nav_position", position);
-                startActivity(feedListIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, FeedListActivity.class);
+                intent.putExtra("feed_type", "events");
+                intent.putExtra("feed_url", "http://www.media.inaf.it/category/eventi/feed");
                 break;
             }
-            case 3: {
+            case R.id.drawer_section_4: {
                 mTitle = getString(R.string.title_section4);
-                Intent videoGalleryIntent = new Intent(this, VideoGalleryActivity.class);
-                videoGalleryIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                videoGalleryIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                videoGalleryIntent.putExtra("nav_position", position);
-                startActivity(videoGalleryIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, VideoGalleryActivity.class);
                 break;
             }
-            case 4: {
+            case R.id.drawer_section_5: {
                 mTitle = getString(R.string.title_section5);
-                Intent appsIntent = new Intent(this, AppsActivity.class);
-                appsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                appsIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                appsIntent.putExtra("nav_position", position);
-                startActivity(appsIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, AppsActivity.class);
                 break;
             }
-            case 5: {
+            case R.id.drawer_section_6: {
                 mTitle = getString(R.string.title_section6);
-                Intent placesIntent = new Intent(this, LocationsActivity.class);
-                placesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                placesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                placesIntent.putExtra("nav_position", position);
-                startActivity(placesIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, LocationsActivity.class);
                 break;
             }
-            case 6: {
+            case R.id.drawer_section_7: {
                 mTitle = getString(R.string.title_section7);
-                Intent telescopesIntent = new Intent(this, TelescopeListActivity.class);
-                telescopesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                telescopesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                telescopesIntent.putExtra("nav_position", position);
-                startActivity(telescopesIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, TelescopeListActivity.class);
                 break;
             }
-            case 7: {
+            case R.id.drawer_section_8: {
                 mTitle = getString(R.string.title_section8);
-                Intent satellitesIntent = new Intent(this, SatelliteListActivity.class);
-                satellitesIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                satellitesIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                satellitesIntent.putExtra("nav_position", position);
-                startActivity(satellitesIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, SatelliteListActivity.class);
                 break;
             }
-            case 8: {
+            case R.id.drawer_section_9: {
                 mTitle = getString(R.string.title_section9);
-                Intent jobsIntent = new Intent(this, JobListActivity.class);
-                jobsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                jobsIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                jobsIntent.putExtra("nav_position", position);
-                startActivity(jobsIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, JobListActivity.class);
                 break;
             }
-            case 9: {
+            case R.id.drawer_section_10: {
                 mTitle = getString(R.string.title_section10);
-                Intent shareTweetIntent = new Intent(this, ShareTweetActivity.class);
-                shareTweetIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                shareTweetIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                shareTweetIntent.putExtra("nav_position", position);
-                startActivity(shareTweetIntent);
-                finish();
-                overridePendingTransition(0, 0);
+                intent = new Intent(this, ShareTweetActivity.class);
                 break;
             }
         }
-    }
 
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-    }
+        intent.putExtra("nav_position", mItemId);
+        intent.putExtra("top_activity", true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(0, 0);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            //getMenuInflater().inflate(R.menu.my, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("nav_pos", mPosition);
+        outState.putInt("nav_pos", mItemId);
+        outState.putBoolean("google_services", mGoogleServicesAvailable);
+        outState.putBoolean("top_activity", mTop);
     }
 
     public void startLoading() {
@@ -223,5 +242,20 @@ public class NavigationDrawerActivity extends ActionBarActivity
 
         ProgressBar pb = (ProgressBar) findViewById(R.id.preloader);
         pb.setVisibility(ProgressBar.INVISIBLE);
+    }
+
+    private boolean checkPlayServices() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (status != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+                GooglePlayServicesUtil.getErrorDialog(status, this,
+                        INAF.REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
+            } else {
+                Toast.makeText(this, "This device cannot handle notifications and maps features.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }

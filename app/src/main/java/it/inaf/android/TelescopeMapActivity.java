@@ -20,9 +20,9 @@ public class TelescopeMapActivity extends NavigationDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if(!checkPlayServices())
+        if(!mGoogleServicesAvailable)
             return;
 
         if(savedInstanceState != null)
@@ -56,21 +56,6 @@ public class TelescopeMapActivity extends NavigationDrawerActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("args", mArgs);
-    }
-
-    private boolean checkPlayServices() {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (status != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-                GooglePlayServicesUtil.getErrorDialog(status, this,
-                        INAF.REQUEST_CODE_RECOVER_PLAY_SERVICES).show();
-            } else {
-                Toast.makeText(this, "This device is not supported.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-            return false;
-        }
-        return true;
     }
 
     @Override

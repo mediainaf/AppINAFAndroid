@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_open_map"
-        android:icon="@drawable/pinpoint"
+        android:icon="@drawable/ic_bar_pinpoint"
         android:title="@string/action_open_map"
         app:showAsAction="ifRoom|withText"/>
     <item android:id="@+id/action_open_webcam"
-        android:icon="@drawable/webcam"
+        android:icon="@drawable/ic_bar_webcam"
         android:title="@string/action_open_webcam"
         app:showAsAction="ifRoom|withText"/>
 </menu>

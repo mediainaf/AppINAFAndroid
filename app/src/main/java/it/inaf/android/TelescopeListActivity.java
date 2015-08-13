@@ -77,9 +77,10 @@ public class TelescopeListActivity extends NavigationDrawerActivity
 
     @Override
     public void onItemSelected(Bundle args) {
-        Intent detailIntent = new Intent(this, TelescopeDetailActivity.class);
-        detailIntent.putExtras(args);
-        startActivity(detailIntent);
+        Intent intent = new Intent(this, TelescopeDetailActivity.class);
+        intent.putExtras(args);
+        intent.putExtra("top_activity", false);
+        startActivity(intent);
         overridePendingTransition(0, 0);
     }
 
@@ -93,17 +94,21 @@ public class TelescopeListActivity extends NavigationDrawerActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_open_map:
-                Intent mapIntent = new Intent(this, TelescopeMapActivity.class);
-                mapIntent.putExtras(mArgs);
-                startActivity(mapIntent);
+            case R.id.action_open_map: {
+                Intent intent = new Intent(this, TelescopeMapActivity.class);
+                intent.putExtras(mArgs);
+                intent.putExtra("top_activity", false);
+                startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;
-            case R.id.action_open_webcam:
-                Intent webcamIntent = new Intent(this, WebcamActivity.class);
-                startActivity(webcamIntent);
+            }
+            case R.id.action_open_webcam: {
+                Intent intent = new Intent(this, WebcamActivity.class);
+                intent.putExtra("top_activity", false);
+                startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

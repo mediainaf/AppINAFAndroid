@@ -51,7 +51,7 @@ public class WebcamActivity extends NavigationDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ArrayList<WebcamItem> itemList = new ArrayList<WebcamItem>();
 
@@ -69,8 +69,6 @@ public class WebcamActivity extends NavigationDrawerActivity {
         FragmentManager fm = getSupportFragmentManager();
         fm.beginTransaction()
                 .add(R.id.container, fragment, "fragment_container").commit();
-
-        getActionBar().setTitle("");
     }
 
     @Override

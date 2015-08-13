@@ -16,9 +16,7 @@ public class TelescopeDetailActivity extends NavigationDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
-
-        getActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(savedInstanceState != null)
             mArgs = savedInstanceState.getBundle("args");

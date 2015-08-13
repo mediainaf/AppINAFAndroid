@@ -16,7 +16,7 @@ public class VideoDetailActivity extends NavigationDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mNavigationDrawerFragment.setUpCaretIndicatorEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(savedInstanceState != null)
             mArgs = savedInstanceState.getBundle("args");
@@ -28,8 +28,6 @@ public class VideoDetailActivity extends NavigationDrawerActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, fragment, "fragment_container")
                 .commit();
-
-        getActionBar().setTitle("");
     }
 
     @Override

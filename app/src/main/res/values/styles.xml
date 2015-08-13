@@ -1,16 +1,10 @@
 <resources>
-
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-    </style>
-
     <style name="VideoGrid">
         <item name="android:drawSelectorOnTop">true</item>
         <item name="android:listSelector">@drawable/photogrid_selector</item>
     </style>
-
-    <style name="FullscreenTheme" parent="AppTheme">
+    <style name="FullscreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/black</item>
         <item name="android:windowActionBar">false</item>
     </style>
-
 </resources>
