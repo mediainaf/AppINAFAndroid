@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class VideoGalleryActivity extends NavigationDrawerActivity
         implements JSONRequestFragment.Callbacks, VideoGalleryFragment.Callbacks {
 
-    private static final String mYoutubeFeedUrl = "http://gdata.youtube.com/feeds/api/users/inaftv/uploads?alt=json&max-results=50";
+    private static final String mYoutubeFeedUrl = "http://app.media.inaf.it/GetYoutubeVideoList.php";
     private Bundle mArgs;
     private ArrayList<VideoItem> mItemList = null;
     public static final int JSON_VIDEO_YOUTUBE = 3;
@@ -73,21 +73,21 @@ public class VideoGalleryActivity extends NavigationDrawerActivity
             mItemList = new ArrayList<VideoItem>();
 
             try {
-                JSONArray entries = response.getJSONObject("feed").getJSONArray("entry");
+                JSONArray items = response.getJSONArray("items");
 
-                for(int i=0; i<entries.length(); i++)
+                for(int i=0; i<items.length(); i++)
                 {
                     VideoItem item = new VideoItem();
 
-                    JSONObject entry = entries.getJSONObject(i);
-                    item.title = entry.getJSONObject("title").getString("$t");
-                    String url = entry.getJSONObject("id").getString("$t");
-                    String youtubeId = url.substring(url.replaceAll("\\\\", "/").lastIndexOf("/"));
+                    JSONObject joItem = items.getJSONObject(i);
+                    JSONObject joSnippet = joItem.getJSONObject("snippet");
+                    item.title = joSnippet.getString("title");
+                    String youtubeId = joItem.getString("id");
                     item.videoUrl = "<body style='margin:0;padding:0;'><div class='embed-container'><iframe src=\"http://www.youtube.com/embed/" + youtubeId + "?modestbranding=1&showinfo=0\" frameborder=\"0\" allowfullscreen></iframe></div></body>";
-                    item.date = DateFormatter.formatType2(entry.getJSONObject("published").getString("$t"));
-                    item.thumbnailUrl = entry.getJSONObject("media$group").getJSONArray("media$thumbnail").getJSONObject(0).getString("url");
-                    item.visualizationCounter = entry.getJSONObject("yt$statistics").getString("viewCount");
-                    item.description = entry.getJSONObject("content").getString("$t");
+                    item.date = DateFormatter.formatType2(joSnippet.getString("publishedAt"));
+                    item.thumbnailUrl = joSnippet.getJSONObject("thumbnails").getJSONObject("default").getString("url");
+                    item.visualizationCounter = joItem.getJSONObject("statistics").getString("viewCount");
+                    item.description = joSnippet.getString("description");
 
                     mItemList.add(item);
                 }
