@@ -97,11 +97,11 @@ public class NavigationDrawerActivity extends AppCompatActivity implements
 
 
         if(mGoogleServicesAvailable) {
-            // TODO handle push registration fail
-            /*mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            mRegistrationBroadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    Toast.makeText(getApplicationContext(), "Registered!", Toast.LENGTH_LONG).show();
+                    // TODO handle push registration fail
+                    /*Toast.makeText(getApplicationContext(), "Registered!", Toast.LENGTH_LONG).show();
                     SharedPreferences sharedPreferences =
                             PreferenceManager.getDefaultSharedPreferences(context);
                     boolean sentToken = sharedPreferences
@@ -110,9 +110,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements
                         Toast.makeText(getApplicationContext(), "All ok!", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
-                    }
+                    }*/
                 }
-            };*/
+            };
 
             Intent intent = new Intent(this, PushRegistrationIntentService.class);
             startService(intent);
