@@ -37,6 +37,7 @@ public class FeedListFragment extends ListFragment {
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
     private int mActivatedPosition = ListView.INVALID_POSITION;
     private Callbacks mCallbacks = sDummyCallbacks;
+    int mSelection = -1;
 
     public interface Callbacks
     {
@@ -84,6 +85,11 @@ public class FeedListFragment extends ListFragment {
         mItemList = (ArrayList<RSSItem>) bundle.getSerializable("item_list");
         mFeedUrl = bundle.getString("feed_url");
         mRssAdapter = new RSSListAdapter(getActivity(), R.layout.feed_item, mItemList);
+
+        mSelection = bundle.getInt("item_pos");
+        if(mSelection >= 0) {
+            openFeedDetail(mSelection);
+        }
     }
 
     @Override
@@ -94,6 +100,16 @@ public class FeedListFragment extends ListFragment {
         getActivity().setTitle(mTitle);
         mProgressBar = View.inflate(getActivity(), R.layout.progress_bar, null);
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mSelection >= 0)
+            return;
+
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.beginTransaction().show(this).commit();
     }
 
     @Override
@@ -115,16 +131,7 @@ public class FeedListFragment extends ListFragment {
     {
         super.onListItemClick(l, v, position, id);
 
-        RSSItem data = mItemList.get(position);
-
-        Bundle args = new Bundle();
-        args.putString("title", data.title);
-        args.putString("author", data.author);
-        args.putString("date", data.date);
-        args.putString("description", data.description);
-        args.putString("content", data.content);
-        args.putInt("position", position);
-        mCallbacks.onFeedItemSelected(args);
+        openFeedDetail(position);
     }
 
     @Override
@@ -294,5 +301,18 @@ public class FeedListFragment extends ListFragment {
     void stopBottomProgressBar(){
         ProgressBar loader = (ProgressBar) getActivity().findViewById(R.id.feed_endlist_loader);
         loader.setVisibility(View.INVISIBLE);
+    }
+
+    void openFeedDetail(int position) {
+        RSSItem data = mItemList.get(position);
+
+        Bundle args = new Bundle();
+        args.putString("title", data.title);
+        args.putString("author", data.author);
+        args.putString("date", data.date);
+        args.putString("description", data.description);
+        args.putString("content", data.content);
+        args.putInt("position", position);
+        mCallbacks.onFeedItemSelected(args);
     }
 }

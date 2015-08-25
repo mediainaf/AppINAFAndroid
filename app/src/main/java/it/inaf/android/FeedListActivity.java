@@ -4,9 +4,12 @@
 
 package it.inaf.android;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -80,7 +83,7 @@ public class FeedListActivity extends NavigationDrawerActivity
             }
         }
         else {
-            addFragment();
+            addFragment(-1);
         }
 
         if(mArgs.getString("feed_type").equals("news")) {
@@ -184,6 +187,21 @@ public class FeedListActivity extends NavigationDrawerActivity
 
     @Override
     public void onResponse(String xmlString, String url) {
+
+        // search the selected item in the current page or go backward (triggered from push messages)
+        boolean searchSelectedItem = false;
+        int selectedItemPosition = -1;
+        String selectedItemTitle = mArgs.getString("item_title");
+        int pagenum = -1;
+        if(selectedItemTitle != null) {
+            searchSelectedItem = true;
+            int qIndex = url.indexOf('?');
+            if(qIndex < 0)
+                pagenum = 0;
+            else
+                pagenum = Integer.valueOf(url.substring(qIndex + 7));
+        }
+
         boolean paged = false;
         if(url.contains("?paged")) {
             paged = true;
@@ -226,13 +244,18 @@ public class FeedListActivity extends NavigationDrawerActivity
                 String contentCDATA = contentElement.getText();
                 rssItem.content = contentCDATA.replaceAll("[<](/)?div[^>]*[>]", "");
 
-                if(paged)
+                if(paged && mFragment != null)
                     mFragment.addItem(rssItem);
                 else
                     mItemList.add(rssItem);
+
+                if(searchSelectedItem && selectedItemPosition < 0 && rssItem.title.compareTo(selectedItemTitle) == 0) {
+                    selectedItemPosition = pagenum * 14 + i;
+                    Log.d("debug", "selectedItemPosition" + selectedItemPosition);
+                }
             }
 
-            if(paged)
+            if(paged && mFragment != null)
                 mFragment.stopBottomProgressBar();
 
         } catch (JDOMException e1) {
@@ -241,9 +264,17 @@ public class FeedListActivity extends NavigationDrawerActivity
             e1.printStackTrace();
         }
 
-        if(!paged) {
-            addFragment();
+        if(searchSelectedItem && selectedItemPosition < 0) {
+            // Search backwards
+            FragmentManager fm = getSupportFragmentManager();
+            StringRequestFragment request = new StringRequestFragment();
+            fm.beginTransaction().add(request, "feed_list_old_request").commit();
+            request.start(Request.Method.GET, "http://www.media.inaf.it/category/eventi/feed?paged=" + (pagenum + 1));
+            return;
         }
+
+        if(!paged || searchSelectedItem)
+            addFragment(selectedItemPosition);
 
 /*        if (findViewById(R.id.item_detail_container) != null) { TODO handle two-panel
             // The detail container view will be present only in the
@@ -296,16 +327,30 @@ public class FeedListActivity extends NavigationDrawerActivity
         outState.putInt("filter_pos", mSpinnerDetailPosition);
     }
 
-    void addFragment() {
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if (mArgs.getString("item_title") != null) {
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().show(mFragment).commit();
+            mArgs.putString("item_title", null);
+        }
+    }
+
+    void addFragment(int selectedPosition) {
         Bundle args = new Bundle();
         args.putString("title", mTitle);
         args.putSerializable("item_list", mItemList);
         args.putString("feed_url", mArgs.getString("feed_url"));
+        args.putInt("item_pos", selectedPosition); // -1 no item selected, shows the list, otherwise open the item directly
         mFragment = new FeedListFragment();
         mFragment.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .add(R.id.container, mFragment, "fragment_container").commit();
+        android.support.v4.app.FragmentTransaction tr = fm.beginTransaction();
+        tr.add(R.id.container, mFragment, "fragment_container");
+        tr.hide(mFragment);
+        tr.commit();
         stopLoading();
     }
 }
